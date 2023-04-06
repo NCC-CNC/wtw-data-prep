@@ -48,6 +48,9 @@ metadata_folder <- "WTW/metadata"
 table_path <- "National/_Tables"
 input_aoi_name <- "AOI.tif"
 
+# NOTE: The datasets required for WTW can be edited at the bottom of the next
+# section by changing the 'WtW' list object
+
 # 3.0 Copy to Tiffs ------------------------------------------------------------
 
 # Get list of files ----
