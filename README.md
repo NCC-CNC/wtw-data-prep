@@ -1,6 +1,9 @@
 # Where To Work data prep
 
-This repo assists in formating your raster data into the 4 mandatory files (described below) required for import into **Where To Work** when using the *upload project data* method.
+This repo assists in formatting your raster data into the four mandatory files (described below) required for import into **Where To Work** when using the *upload project data* method.
+When starting a new project, we recommend copying the scripts, functions, and data needed for your workflow (described below), from this repo into your project file. 
+You can then edit the scripts and run them from your project file.
+
 
 # Introduction
 
@@ -13,6 +16,8 @@ The following scripts are stored in this repo, each is described in more detail 
     -   Note: extracting regional data and/or using a custom grid requires users to add additional scripts or use manual steps to create the raster datasets.
 -   `populate_nat_metadata.R` - copies the required rasters to the Tiffs folder and uses them to prepare the metadata csv file.
 -   `wtw_formatting.R` - Uses the Tiffs rasters and the metadata csv file to create the four WTW input files.
+-   `functions` - folder containing functions needed by various scripts.
+-   `data` - folder containing the NCC 1km raster template required by `aoi_to_1km_grid.R`.
 
 ## Workflows
 
