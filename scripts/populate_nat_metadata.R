@@ -34,6 +34,7 @@ library(stringr)
 library(readr)
 library(readxl)
 source("scripts/functions/fct_sci_to_common.R")
+source("scripts/functions/fct_init_metadata.R")
 
 # 2.0 Set up -------------------------------------------------------------------
 
@@ -128,20 +129,7 @@ aoi_path <- file.path(tiff_folder, input_aoi_name)
 file_list <- file_list[file_list != aoi_path]
 
 ## Build empty data.frame (template for metadata.csv) ----
-df <- data.frame(Type = character(),
-                 Theme = character(),
-                 File = character(),
-                 Name = character(),
-                 Legend = character(),
-                 Values = character(),
-                 Color = character(),
-                 Labels = character(),
-                 Unit = character(),
-                 Provenance = character(),
-                 Order = character(),
-                 Visible = character(),
-                 Hidden = character(),
-                 Goal = character())
+df <- init_metadata()
 
 # 5.0 Populate metadata --------------------------------------------------------
 
