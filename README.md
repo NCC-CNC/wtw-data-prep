@@ -57,6 +57,14 @@ WTW runs prioritizations using the values assigned to each planning unit from th
 - Projects using the NCC national grid project all datasets into a WGS84 version of Canada Albers.
 - Projects using a custom grid will use the projection of the provided AOI shapefile. Any user-provided data should be projected to match the planning units.
 
+
+## Definitions
+
+**NCC grid** - the NCC 1km that covers all of Canada.
+**AOI** - area of interest, usually a polygon defining the study region for a WTW project.
+**Planning units (PU)** - the 'building blocks' used in WTW to construct solutions. In this case the PU's are the NCC grid cells that intersect with the AOI. In other projects PU's could be a different sized grid, or any collection of non-overlapping polygons.
+
+
 ## Scripts
 
 ### Initiate a new project
