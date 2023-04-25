@@ -42,7 +42,7 @@ library(tools)
 metadata <- read.csv("WTW/metadata/nb_metadata.csv")
 
 # Read-in vector grid
-grid <- read_sf("AOI/AOI.shp")
+grid <- read_sf("PU/PU.shp")
 
  # Set intersections path
 intersections_gdb <- "Regional/intersections.gdb"

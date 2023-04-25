@@ -11,7 +11,7 @@
 #             data table. Values represent the amount of the feature in the
 #             planning unit (in units matching the meta data units).
 #          2. Meta data table listing all datasets and their attributes.
-#          3. The AOI tif where all AOI values are zero's (i.e. AOI/AOI0.tif)
+#          3. The PU tif where all PU values are zero's (i.e. PU/PU0.tif)
 #
 # Outputs: 1. Converts the planning units to a raster for each column, and saves
 #             into the Tiffs folder.
@@ -39,7 +39,7 @@ metadata <- read.csv("WTW/metadata/nb_metadata.csv")
 vector_grid <- read_sf("Regional/Extractions/planning_unit_values.shp")
 
 # Read-in raster grid 
-raster_grid <- raster("AOI/AOI0.tif")
+raster_grid <- raster("PU/PU0.tif")
 
 
 # Processing -------------------------------------------------------------------

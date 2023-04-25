@@ -31,7 +31,7 @@ project_data_type <- "REGIONAL" # NATIONAL or REGIONAL or BOTH
 # 02 Processing ----------------------------------------------------------------
 
 # create folder structure
-dir.create(file.path(project_folder, "AOI"), recursive = TRUE)
+dir.create(file.path(project_folder, "PU"), recursive = TRUE)
 dir.create(file.path(project_folder, "scripts"), recursive = TRUE)
 dir.create(file.path(project_folder, "Tiffs"), recursive = TRUE)
 dir.create(file.path(project_folder, "WTW/metadata"), recursive = TRUE)
@@ -47,6 +47,6 @@ if(project_data_type == "BOTH"){
   dir.create(file.path(project_folder, "National"), recursive = TRUE)
 }
 
-# Copy AOI into AOI folder
+# Copy AOI into PU folder
 x <- st_read(aoi_shp)
-st_write(x, file.path(project_folder, "AOI/AOI_polygon.shp"), append = FALSE)
+st_write(x, file.path(project_folder, "PU/AOI.shp"), append = FALSE)

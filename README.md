@@ -27,9 +27,9 @@ Note: users using a custom grid for planning units who want to add the standard 
 
 The following scripts in this repo are used to prepare the standard [national datasets](#national-datasets) using the NCC 1km planning units (i.e. workflow 1 described above). More details on each script are provided in the [scripts](#script) section:
 
--   `01_initiate_project.R` - sets up folder structure, saves AOI_polygon.shp
+-   `01_initiate_project.R` - sets up folder structure, saves AOI.shp
 -   `02_aoi_to_1km_grid.R` - extracts the NCC 1km grid cells intersecting the AOI. Saves the grid in vector and raster formats.
--   `03_natdata_to_aoi_1km_grid.R` - extracts the pre-prepped national data to the AOI 1km grid and saves as rasters in the National folder.
+-   `03_natdata_to_1km_pu_grid.R` - extracts the pre-prepped national data to the 1km PU grid and saves as rasters in the National folder.
 -   `04_populate_nat_metadata.R` - copies the required rasters to the Tiffs folder and uses them to prepare the metadata csv file.
 -   `05_wtw_formatting.R` - Uses the Tiffs rasters and the metadata csv file to create the four WTW input files.
 -   `functions` - folder containing functions needed by various scripts.
@@ -63,7 +63,7 @@ WTW runs prioritizations using the values assigned to each planning unit from th
 
 `01_initiate_project.R`
 
-_Sets up the folder structure and copies the AOI shapefile into the AOI folder._
+_Sets up the folder structure and copies the AOI shapefile into the PU folder._
 
 Inputs
 
@@ -72,10 +72,10 @@ Inputs
 
 Outputs
 
--   Creates the following folder structure and copies the AOI polygon into the AOI folder:
+-   Creates the following folder structure and copies the AOI polygon into the PU folder:
     <br>
-    |--- AOI <br>
-    |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--- AOI_polygon.shp <br>
+    |--- PU <br>
+    |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--- AOI.shp <br>
     |--- scripts <br>
     |--- Tiffs <br>
     |--- WTW <br>
@@ -88,19 +88,19 @@ Outputs
 
 `aoi_to_1km_grid.R`
 
-_Creates the AOI grid using all NCC 1km grid cells that intersect the AOI._
+_Creates the planning unit grid using all NCC 1km grid cells that intersect the AOI._
 
 Inputs
 
-- The AOI polygon (AOI/AOI_polygon.shp)
+- The AOI polygon (PU/AOI.shp)
 - NCC 1km grid (Constant_1KM_IDX.tif)
 
 Outputs
 
 - Extracts all 1km grid cells intersecting the AOI and saves them as:
-  - AOI/AOI.shp
-  - AOI/AOI.tif (raster of 1's)
-  - AOI/AOI0.tif (raster of 0's)
+  - PU/PU.shp
+  - PU/PU.tif (raster of 1's)
+  - PU/PU0.tif (raster of 0's)
   
 **Takes a polygon shapefile (AOI) ...**
 ![](https://user-images.githubusercontent.com/29556279/227652386-62c9ed2f-8923-428d-ad8c-8a17a867af04.png)
@@ -109,15 +109,15 @@ Outputs
 ![](https://user-images.githubusercontent.com/29556279/227652391-f45eca44-71f5-4cc5-9ed9-3ff69b4ce1d2.png)
 
 
-### Extract national data to the AOI 1km grid
+### Extract national data to the 1km PU grid
 
-`natdata_to_aoi_1km_grid.R`
+`natdata_to_1km_pu_grid.R`
 
 _Used in conjunction with aoi_to_1km_grid.R to prepare NATIONAL data for the AOI._
 
 Inputs
 
-- The prepared AOI 1km grid (AOI/AOI.tif)
+- The prepared 1km PU grid (PU/PU.tif)
 - Pre-prepped national data folder
 
 Outputs
@@ -180,7 +180,7 @@ _Once created, the metadata csv table should be manually QC'd before proceeding 
 
 Inputs
 
-- The prepared 1km x 1km raster NATIONAL raster layers created by `natdata_to_aoi_1km_grid.R`.
+- The prepared 1km x 1km raster NATIONAL raster layers created by `natdata_to_1km_pu_grid.R`.
 
 Outputs
 

@@ -7,7 +7,7 @@
 #              upload project data into Where To Work
 #
 # Inputs:  1. A metadata.csv that defines attributes of each raster layer
-#          2. A folder of rasters (AOI, themes, weights, includes and excludes) 
+#          2. A folder of rasters (themes, weights, includes and excludes) 
 #             that all have the same spatial properties (cell size, extent, CRS)
 #          3. Required R libraries
 #
@@ -51,7 +51,7 @@ metadata_path <- "WTW/metadata/nb_metadata_final.csv" # <--- CHANGE PATH HERE FO
 tiffs_path <- "Tiffs" # <--- CHANGE PATH HERE FOR NEW PROJECT
 
 ## Name of study area (planning unit) raster
-study_area_file <- "AOI/AOI.tif" # <--- CHANGE PATH HERE FOR NEW PROJECT
+study_area_file <- "PU/PU.tif" # <--- CHANGE PATH HERE FOR NEW PROJECT
 
 ## Set output variables
 prj_name <- "NB_100km2_grid"

@@ -7,7 +7,7 @@
 #              Generates a metadata.csv for all national layers. This csv is 
 #              a required input for 03_format_data_wtw.R.  
 #
-# Inputs:  1. A folder of national rasters (from natdata_to_aoi_1km_grid.R) 
+# Inputs:  1. A folder of national rasters (from natdata_to_1km_pu_grid.R) 
 #          2. Output names and paths
 #
 # Outputs: 1. A metadata.csv to QC (quality control)
@@ -43,11 +43,11 @@ source("scripts/functions/fct_init_metadata.R")
 ### CHANGE PATH AND NAMES FOR NEW PROJECT
 output_metadata_name <- "sw-on" 
 
-aoi_data_folder <- "National"
+pa_data_folder <- "National"
 tiff_folder <-"Tiffs"
 metadata_folder <- "WTW/metadata" 
 table_path <- "National/_Tables"
-input_aoi_name <- "AOI.tif"
+input_pu_name <- "PU.tif"
 
 # NOTE: The datasets required for WTW can be edited at the bottom of the next
 # section by changing the 'WtW' list object
@@ -55,46 +55,46 @@ input_aoi_name <- "AOI.tif"
 # 3.0 Copy to Tiffs ------------------------------------------------------------
 
 # Get list of files ----
-ECCC_CH <- list.files(file.path(aoi_data_folder, "Themes/ECCC_CH"), 
+ECCC_CH <- list.files(file.path(pa_data_folder, "Themes/ECCC_CH"), 
                       pattern='.tif$', full.names = T, recursive = F)
 
-ECCC_SAR <- list.files(file.path(aoi_data_folder, "Themes/ECCC_SAR"), 
+ECCC_SAR <- list.files(file.path(pa_data_folder, "Themes/ECCC_SAR"), 
                        pattern='.tif$', full.names = T, recursive = F)
 
-IUCN_AMPH <- list.files(file.path(aoi_data_folder, "Themes/IUCN_AMPH"), 
+IUCN_AMPH <- list.files(file.path(pa_data_folder, "Themes/IUCN_AMPH"), 
                         pattern='.tif$', full.names = T, recursive = F)
 
-IUCN_BIRD <- list.files(file.path(aoi_data_folder, "Themes/IUCN_BIRD"), 
+IUCN_BIRD <- list.files(file.path(pa_data_folder, "Themes/IUCN_BIRD"), 
                         pattern='.tif$', full.names = T, recursive = F)
 
-IUCN_MAMM <- list.files(file.path(aoi_data_folder, "Themes/IUCN_MAMM"), 
+IUCN_MAMM <- list.files(file.path(pa_data_folder, "Themes/IUCN_MAMM"), 
                         pattern='.tif$', full.names = T, recursive = F)
 
-IUCN_REPT <- list.files(file.path(aoi_data_folder, "Themes/IUCN_REPT"), 
+IUCN_REPT <- list.files(file.path(pa_data_folder, "Themes/IUCN_REPT"), 
                         pattern='.tif$', full.names = T, recursive = F)
 
-NSC_END <- list.files(file.path(aoi_data_folder, "Themes/NSC_END"), 
+NSC_END <- list.files(file.path(pa_data_folder, "Themes/NSC_END"), 
                       pattern='.tif$', full.names = T, recursive = F)
 
-NSC_SAR <- list.files(file.path(aoi_data_folder, "Themes/NSC_SAR"), 
+NSC_SAR <- list.files(file.path(pa_data_folder, "Themes/NSC_SAR"), 
                       pattern='.tif$', full.names = T, recursive = F)
 
-NSC_SPP <- list.files(file.path(aoi_data_folder, "Themes/NSC_SPP"), 
+NSC_SPP <- list.files(file.path(pa_data_folder, "Themes/NSC_SPP"), 
                       pattern='.tif$', full.names = T, recursive = F)
 
-LC <- list.files(file.path(aoi_data_folder, "Themes/LC"), 
+LC <- list.files(file.path(pa_data_folder, "Themes/LC"), 
                  pattern='.tif$', full.names = T, recursive = F)
 
-KM <- list.files(file.path(aoi_data_folder, "Themes/KM"), 
+KM <- list.files(file.path(pa_data_folder, "Themes/KM"), 
                  pattern='.tif$', full.names = T, recursive = F)
 
-W <- list.files(file.path(aoi_data_folder,"Weights"), 
+W <- list.files(file.path(pa_data_folder,"Weights"), 
                 pattern='.tif$', full.names = T, recursive = F)
 
-Incl <- list.files(file.path(aoi_data_folder, "Includes"), 
+Incl <- list.files(file.path(pa_data_folder, "Includes"), 
                    pattern='.tif$', full.names = T, recursive = F)
 
-Excl <- list.files(file.path(aoi_data_folder, "Excludes"), 
+Excl <- list.files(file.path(pa_data_folder, "Excludes"), 
                    pattern='.tif$', full.names = T, recursive = F)
 
 # Change list here to include or exclude layers to copy ----
@@ -124,9 +124,9 @@ NSC_SPP_LU <- read_excel(file.path(table_path, "NSC_SPP_Metadata.xlsx"))
 file_list <- list.files(tiff_folder, pattern='.tif$', 
                         full.names = T, recursive = T) 
 
-## Remove AOI from file list (if it's in there) ----
-aoi_path <- file.path(tiff_folder, input_aoi_name) 
-file_list <- file_list[file_list != aoi_path]
+## Remove PU from file list (if it's in there) ----
+pu_path <- file.path(tiff_folder, input_pu_name) 
+file_list <- file_list[file_list != pu_path]
 
 ## Build empty data.frame (template for metadata.csv) ----
 df <- init_metadata()
@@ -151,8 +151,8 @@ for (file in file_list) {
   print(paste0("Populating ", counter, " of ", len, ": ", file))
   
   ## TYPE ----------------------------------------------------------------------
-  ### Aoi
-  if (startsWith(file_no_ext, "AOI")) {
+  ### PU
+  if (startsWith(file_no_ext, "PU")) {
     type <- "-"
     ### Theme  
   } else if (startsWith(file_no_ext, "T_")) {
@@ -301,7 +301,7 @@ for (file in file_list) {
     if (raster::minValue(wtw_raster) == 0) {
       values <- "0, 1"
     } else {
-      values <- "1" # layer covers entire AOI
+      values <- "1" # layer covers entire PU
     }
     ### Includes  
   } else if (startsWith(file_no_ext, "I")) {
@@ -320,63 +320,63 @@ for (file in file_list) {
     if (startsWith(values, "0")) {
       color <- "#00000000, #fb9a99"
     } else {
-      color <- "#fb9a99" # layer covers entire AOI
+      color <- "#fb9a99" # layer covers entire PU
     }
     ### ECCC CH  
   } else if (startsWith(file_no_ext, "T_ECCC_CH")) {
     if (startsWith(values, "0")) {
       color <- "#00000000, #ffed6f"
     } else {
-      color <- "#ffed6f" # layer covers entire AOI
+      color <- "#ffed6f" # layer covers entire PU
     }
     ### IUCN AMPH  
   } else if (startsWith(file_no_ext, "T_IUCN_AMPH")) {
     if (startsWith(values, "0")) {
       color <- "#00000000, #a6cee3"
     } else {
-      color <- "#a6cee3" # layer covers entire AOI
+      color <- "#a6cee3" # layer covers entire PU
     }
     ### IUCN BIRD  
   } else if (startsWith(file_no_ext, "T_IUCN_BIRD")) {
     if (startsWith(values, "0")) {    
       color <- "#00000000, #ff7f00"
     } else {
-      color <- "#ff7f00" # layer covers entire AOI
+      color <- "#ff7f00" # layer covers entire PU
     }
     ### IUCN MAMM  
   } else if (startsWith(file_no_ext, "T_IUCN_MAMM")) {
     if (startsWith(values, "0")) {     
       color <- "#00000000, #b15928"
     } else {
-      color <- "#b15928" # layer covers entire AOI
+      color <- "#b15928" # layer covers entire PU
     }
     ### IUCN REPT  
   } else if (startsWith(file_no_ext, "T_IUCN_REPT")) {
     if (startsWith(values, "0")) { 
       color <- "#00000000, #b2df8a"
     } else {
-      color <- "#b2df8a" # layer covers entire AOI
+      color <- "#b2df8a" # layer covers entire PU
     }
     ### NSC SAR  
   } else if (startsWith(file_no_ext, "T_NSC_SAR")) {
     if (startsWith(values, "0")) {     
       color <- "#00000000, #d73027"
     } else {
-      color <- "#d73027" # layer covers entire AOI
+      color <- "#d73027" # layer covers entire PU
     }
     ## NSC END  
   } else if (startsWith(file_no_ext, "T_NSC_END")) {
     if (startsWith(values, "0")) { 
       color <- "#00000000, #4575b4"
     } else {
-      color <- "#4575b4" # layer covers entire AOI
+      color <- "#4575b4" # layer covers entire PU
     }
     ### NSC SPP  
   } else if (startsWith(file_no_ext, "T_NSC_SPP")) {
     if (startsWith(values, "0")) { 
       color <- "#00000000, #e6f598"
     } else {
-      color <- "#e6f598" # layer covers entire AOI
+      color <- "#e6f598" # layer covers entire PU
     }
     ### LC  
   } else if (startsWith(file_no_ext, "T_LC")) {
@@ -422,7 +422,7 @@ for (file in file_list) {
     if (startsWith(values, "0")) {
       labels <- "absence, presence"
     } else {
-      labels <- "presence" # layer covers entire AOI
+      labels <- "presence" # layer covers entire PU
     }
     ### Includes  
   } else if (startsWith(file_no_ext, "I_")) {

@@ -26,7 +26,7 @@ import arcpy, os
 arcpy.env.overwriteOutput = True
 
 
-grid = "../AOI/AOI.shp" # <--- path to planning units grid
+grid = "../PU/PU.shp" # <--- path to planning units grid
 out_gdb = "../Regional/Intersections.gdb" # <--- path to output folder for intersections
 
 themes_dir = "../Regional/Themes" # <--- path to themes data sub-folders
