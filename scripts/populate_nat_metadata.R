@@ -55,46 +55,46 @@ input_aoi_name <- "AOI.tif"
 # 3.0 Copy to Tiffs ------------------------------------------------------------
 
 # Get list of files ----
-ECCC_CH <- list.files(paste0(aoi_data_folder, "Themes/ECCC_CH"), 
+ECCC_CH <- list.files(file.path(aoi_data_folder, "Themes/ECCC_CH"), 
                       pattern='.tif$', full.names = T, recursive = F)
 
-ECCC_SAR <- list.files(paste0(aoi_data_folder, "Themes/ECCC_SAR"), 
+ECCC_SAR <- list.files(file.path(aoi_data_folder, "Themes/ECCC_SAR"), 
                        pattern='.tif$', full.names = T, recursive = F)
 
-IUCN_AMPH <- list.files(paste0(aoi_data_folder, "Themes/IUCN_AMPH"), 
+IUCN_AMPH <- list.files(file.path(aoi_data_folder, "Themes/IUCN_AMPH"), 
                         pattern='.tif$', full.names = T, recursive = F)
 
-IUCN_BIRD <- list.files(paste0(aoi_data_folder, "Themes/IUCN_BIRD"), 
+IUCN_BIRD <- list.files(file.path(aoi_data_folder, "Themes/IUCN_BIRD"), 
                         pattern='.tif$', full.names = T, recursive = F)
 
-IUCN_MAMM <- list.files(paste0(aoi_data_folder, "Themes/IUCN_MAMM"), 
+IUCN_MAMM <- list.files(file.path(aoi_data_folder, "Themes/IUCN_MAMM"), 
                         pattern='.tif$', full.names = T, recursive = F)
 
-IUCN_REPT <- list.files(paste0(aoi_data_folder, "Themes/IUCN_REPT"), 
+IUCN_REPT <- list.files(file.path(aoi_data_folder, "Themes/IUCN_REPT"), 
                         pattern='.tif$', full.names = T, recursive = F)
 
-NSC_END <- list.files(paste0(aoi_data_folder, "Themes/NSC_END"), 
+NSC_END <- list.files(file.path(aoi_data_folder, "Themes/NSC_END"), 
                       pattern='.tif$', full.names = T, recursive = F)
 
-NSC_SAR <- list.files(paste0(aoi_data_folder, "Themes/NSC_SAR"), 
+NSC_SAR <- list.files(file.path(aoi_data_folder, "Themes/NSC_SAR"), 
                       pattern='.tif$', full.names = T, recursive = F)
 
-NSC_SPP <- list.files(paste0(aoi_data_folder, "Themes/NSC_SPP"), 
+NSC_SPP <- list.files(file.path(aoi_data_folder, "Themes/NSC_SPP"), 
                       pattern='.tif$', full.names = T, recursive = F)
 
-LC <- list.files(paste0(aoi_data_folder, "Themes/LC"), 
+LC <- list.files(file.path(aoi_data_folder, "Themes/LC"), 
                  pattern='.tif$', full.names = T, recursive = F)
 
-KM <- list.files(paste0(aoi_data_folder, "Themes/KM"), 
+KM <- list.files(file.path(aoi_data_folder, "Themes/KM"), 
                  pattern='.tif$', full.names = T, recursive = F)
 
-W <- list.files(paste0(aoi_data_folder,"Weights"), 
+W <- list.files(file.path(aoi_data_folder,"Weights"), 
                 pattern='.tif$', full.names = T, recursive = F)
 
-Incl <- list.files(paste0(aoi_data_folder, "Includes"), 
+Incl <- list.files(file.path(aoi_data_folder, "Includes"), 
                    pattern='.tif$', full.names = T, recursive = F)
 
-Excl <- list.files(paste0(aoi_data_folder, "Excludes"), 
+Excl <- list.files(file.path(aoi_data_folder, "Excludes"), 
                    pattern='.tif$', full.names = T, recursive = F)
 
 # Change list here to include or exclude layers to copy ----
