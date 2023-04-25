@@ -18,6 +18,7 @@
 # See https://github.com/NCC-CNC/wtw-data-prep for an explanation of the
 # various workflows
 
+library(sf)
 
 # 01 Set parameters ------------------------------------------------------------
 
