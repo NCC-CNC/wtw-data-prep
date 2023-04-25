@@ -14,18 +14,18 @@ The objective of these scripts is to get the WTW data into a standardized set of
 
 ## Workflows
 
-1. The most common workflow is to use NCC's standard 1km grid as the planning units, and the standard set of [national datasets](#extract-national-data-to-the-aoi-1km-grid) that have been pre-prepped into the 1km grid. This workflow simply extracts the 1km planning units and the pre-prepped data for all planning units covering the AOI.
+1. The most common workflow is to use NCC's standard 1km grid as the planning units, and the standard set of [national datasets](#national-datasets) that have been pre-prepped into the 1km grid. This workflow simply extracts the 1km planning units and the pre-prepped data for all planning units covering the AOI.
 
 2. Some users may wish to add some additional datasets to workflow 1. This requires the user to prepare thier own raster datasets to supplement the standard set of national data. This typically involves intersecting the data to the planning unit grid and summarizing the data values per planning unit. See the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example) folder for scripts to do this.
 
 3. Some users may wish to use only their own datasets in which case they need to prepare all the input data using the 1km national grid, or an alternate custom grid. See the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example) folder for scripts to do this.
 
-Note: users using a custom grid for planning units who want to add the standard national datasets will need to access the original raster or vector versions of these datasets and apply them in workflow 3. The pre-prepped [national datasets](#extract-national-data-to-the-aoi-1km-grid) can only be used with the standard NCC 1km grid.
+Note: users using a custom grid for planning units who want to add the standard national datasets will need to access the original raster or vector versions of these datasets and apply them in workflow 3. The pre-prepped [national datasets](#national-datasets) can only be used with the standard NCC 1km grid.
 
 
 ## National data
 
-The following scripts in this repo are used to prepare the standard national datasets using the NCC 1km planning units (i.e. workflow 1 described above). More details on each script are provided in the [scripts](#script) section:
+The following scripts in this repo are used to prepare the standard [national datasets](#national-datasets) using the NCC 1km planning units (i.e. workflow 1 described above). More details on each script are provided in the [scripts](#script) section:
 
 -   `01_initiate_project.R` - sets up folder structure, saves AOI_polygon.shp
 -   `02_aoi_to_1km_grid.R` - extracts the NCC 1km grid cells intersecting the AOI. Saves the grid in vector and raster formats.
@@ -38,18 +38,18 @@ The following scripts in this repo are used to prepare the standard national dat
 
 ## Regional data
 
-Any user provided datasets that are not part of the standard [national datasets](#extract-national-data-to-the-aoi-1km-grid) are referred to as **Regional data**. These are typically vector or raster layers that need to be summarized per planning unit. An example workflow for this is provided in the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example) folder.
+Any user provided datasets that are not part of the standard [national datasets](#national-datasets) are referred to as **Regional data**. These are typically vector or raster layers that need to be summarized per planning unit. An example workflow for this is provided in the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example) folder.
 
 
 ## Data formats
 
 WTW runs prioritizations using the values assigned to each planning unit from the input data. It's important that users of WTW understand what their data represent, especially for users adding their own data into the tool.
 
-Many datasets simply represent the **area**, **length** or **count** of a given feature in each planning unit. Examples include species range data, the density of rivers or roads, or the count of specific sites.
+- **area**, **length** or **count**: Many datasets simply represent the area, length or count of a given feature in each planning unit. Examples include species range data, the density of rivers or roads, or the count of specific sites.
 
-Some data have their own units that are carried though to WTW. Examples include carbon storage which can be expressed as tonnes of C per planning unit. In this case the source data are raster values that can be summed within each planning unit.
+- **Simple summaries** - Some data have their own units that are carried though to WTW. Examples include carbon storage which can be expressed as tonnes of C per planning unit. In this case the source data are raster values that can be summed within each planning unit.
 
-Some data may require more complex summaries to get meaningful values per planning unit. An example could be the weighted average stream order for a user looking to prioritize headwaters.
+- **Complex summaries** - Some data may require more complex summaries to get meaningful values per planning unit. An example could be the weighted average stream order for a user looking to prioritize headwaters.
 
 
 ## Projections
@@ -131,7 +131,7 @@ Outputs
 
 :warning: **Data needed to run this script is not packaged in this repo.**
 
-#### National Data:
+#### National Datasets
 ##### Themes
 
 * Environment and Climate Change Canada Critical Habitat (ECCC_CH)
