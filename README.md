@@ -1,78 +1,67 @@
 # Where To Work data prep
 
-This repo assists in formatting your raster data into the four mandatory files (described below) required for import into **Where To Work** when using the *upload project data* method.
-When starting a new project, we recommend copying the scripts, functions, and data needed for your workflow (described below), from this repo into your project file. 
-You can then edit the scripts and run them from your project file.
+This repo assists in formatting your data into the four mandatory files (described below) required for import into **Where To Work** (WTW) when using the *upload project data* method.
+
+These scripts can be used when planning units are grid cells that can be passed to WTW as raster layers where each raster cell is a unique planning unit. For non-grid planning units, a different workflow is required ([#9](https://github.com/NCC-CNC/wtw-data-prep/issues/9)).
+
+When starting a new project, we recommend copying the scripts, functions, and data needed for your workflow (described below), from this repo into your project file. You can then edit the scripts and run them from your project file.
 
 
-# Introduction
+## Objective
 
-The following scripts are stored in this repo, each is described in more detail below:
+The objective of these scripts is to get the WTW data into a standardized set of raster files representing the planning units covering the AOI, and to prepare a meta data csv table that defines the WTW parameters for each raster. The `05_wtw_formatting.R` script can then package the data into the WTW format.
 
--   `initiate_project.R` - sets up folder structure, saves AOI_polygon.shp
--   `aoi_to_1km_grid.R` - extracts the NCC 1km grid cells intersecting the AOI. Saves the grid in vector and raster formats.
--   `aoi_to_custom_grid.R` - creates a custom sized grid intersecting the AOI. Saves the grid in vector and raster formats.
--   `natdata_to_aoi_1km_grid.R` - extracts the pre-prepped national data to the AOI 1km grid and saves as rasters in the National folder.
-    -   Note: extracting regional data and/or using a custom grid requires users to add additional scripts or use manual steps to create the raster datasets.
--   `populate_nat_metadata.R` - copies the required rasters to the Tiffs folder and uses them to prepare the metadata csv file.
--   `wtw_formatting.R` - Uses the Tiffs rasters and the metadata csv file to create the four WTW input files.
--   `functions` - folder containing functions needed by various scripts.
--   `data` - folder containing the NCC 1km raster template required by `aoi_to_1km_grid.R`.
 
 ## Workflows
 
-Different combinations of scripts can be used to prepare WTW data depending on the source of the input data and the planning units required in WTW.
-The ultimate objective is to get all input data into a standardized raster format (matching extents, cell size, projection etc.) in the Tiffs folder, with a completed metadata csv table. 
-The wtw_formatting.R script can then package the data into the WTW format.
+1. The most common workflow is to use NCC's standard 1km grid as the planning units, and the standard set of [national datasets](#extract-national-data-to-the-aoi-1km-grid) that have been pre-prepped into the 1km grid. This workflow simply extracts the 1km planning units and the pre-prepped data for all planning units covering the AOI.
 
--   **Data**: Projects can use NATIONAL or REGIONAL data. NATIONAL data are the standard set of WTW datasets pre-prepped to a lkm grid. REGIONAL data are any other datasets provided by the user.
--   **Planning units**: Projects can use the standard NCC 1km planning unit grid, or a custom set of planning units such as a custom grid (or a non-grid set of planning units).
+2. Some users may wish to add some additional datasets to workflow 1. This requires the user to prepare thier own raster datasets to supplement the standard set of national data. This typically involves intersecting the data to the planning unit grid and summarizing the data values per planning unit. See the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example) folder for scripts to do this.
 
-The following workflows are possible based on the combination of data and planning units:
+3. Some users may wish to use only their own datasets in which case they need to prepare all the input data using the 1km national grid, or an alternate custom grid. See the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example) folder for scripts to do this.
 
--   **NATIONAL DATA + 1KM GRID** (recommended workflow):
-    -   Input: AOI shapefile, pre-prepped national data in national 1km grid, NCC 1km grid template
-    -   Scripts to use:
-        -   initiate_project.R
-        -   aoi_to_1km_grid.R
-        -   natdata_to_aoi_1km_grid.R
-        -   populate_nat_metadata.R
-        -   wtw_formatting.R
--   **REGIONAL DATA + 1km GRID**:
-    -   Input: AOI shapefile, regional datasets, NCC 1km grid template
-    -   Scripts to use:
-        -   initiate_project.R
-        -   aoi_to_1km_grid.R
-        -   PROJECT SPECIFIC SCRIPTS: custom python and/or R scripts to extract the regional datasets into the AOI 1km grid and convert to rasters in the Tiffs folder
-        -   MANUALLY CREATE metadata csv
-        -   wtw_formatting.R
-    -   Note that this workflow can be combined with NATIONAL DATA + 1KM GRID in cases where users want to use both NATIONAL and REGIONAL data.
-    -   Note that the metadata table needs to be created manually for regional data (or manually appended to the NATIONAL metadata if using both NATIONAL and REGIONAL data)
--   **REGIONAL DATA + CUSTOM GRID**:
-    -   Input: AOI shapefile, regional datasets, grid cell size
-    -   Scripts to use:
-        -   initiate_project.R
-        -   aoi_to_custom_grid.R
-        -   PROJECT SPECIFIC SCRIPTS: custom python and/or R scripts are used to extract the regional datasets into the custom grid and convert to rasters in the Tiffs folder
-        -   wtw_formatting.R
-    -   Note that the metadata table needs to be created manually for regional data
--   **NATIONAL DATA + CUSTOM GRID**: (note we have not encountered this workflow yet)
-    -   Input: AOI shapefile, grid cell size, raw national data (not-prepped into 1km grid)
-    -   Scripts to use:
-        -   initiate_project.R
-        -   aoi_to_custom_grid.R
-        -   PROJECT SPECIFIC SCRIPTS: custom python and/or R scripts are used to extract the raw national datasets into the custom grid and convert to rasters in the Tiffs folder
-        -   populate_nat_metadata.R
-        -   wtw_formatting.R
+Note: users using a custom grid for planning units who want to add the standard national datasets will need to access the original raster or vector versions of these datasets and apply them in workflow 3. The pre-prepped [national datasets](#extract-national-data-to-the-aoi-1km-grid) can only be used with the standard NCC 1km grid.
+
+
+## National data
+
+The following scripts in this repo are used to prepare the standard national datasets using the NCC 1km planning units (i.e. workflow 1 described above). More details on each script are provided in the [scripts](#script) section:
+
+-   `01_initiate_project.R` - sets up folder structure, saves AOI_polygon.shp
+-   `02_aoi_to_1km_grid.R` - extracts the NCC 1km grid cells intersecting the AOI. Saves the grid in vector and raster formats.
+-   `03_natdata_to_aoi_1km_grid.R` - extracts the pre-prepped national data to the AOI 1km grid and saves as rasters in the National folder.
+-   `04_populate_nat_metadata.R` - copies the required rasters to the Tiffs folder and uses them to prepare the metadata csv file.
+-   `05_wtw_formatting.R` - Uses the Tiffs rasters and the metadata csv file to create the four WTW input files.
+-   `functions` - folder containing functions needed by various scripts.
+-   `data` - folder containing the NCC 1km raster template required by `02_aoi_to_1km_grid.R`.
+
+
+## Regional data
+
+Any user provided datasets that are not part of the standard [national datasets](#extract-national-data-to-the-aoi-1km-grid) are referred to as **Regional data**. These are typically vector or raster layers that need to be summarized per planning unit. An example workflow for this is provided in the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example) folder.
+
+
+## Data formats
+
+WTW runs prioritizations using the values assigned to each planning unit from the input data. It's important that users of WTW understand what their data represent, especially for users adding their own data into the tool.
+
+Many datasets simply represent the **area**, **length** or **count** of a given feature in each planning unit. Examples include species range data, the density of rivers or roads, or the count of specific sites.
+
+Some data have their own units that are carried though to WTW. Examples include carbon storage which can be expressed as tonnes of C per planning unit. In this case the source data are raster values that can be summed within each planning unit.
+
+Some data may require more complex summaries to get meaningful values per planning unit. An example could be the weighted average stream order for a user looking to prioritize headwaters.
+
 
 ## Projections
 
 - Projects using the NCC national grid project all datasets into a WGS84 version of Canada Albers.
-- Projects using a custom grid will use the projection of the provided AOI shapefile. Any regional data should also use this projection.
+- Projects using a custom grid will use the projection of the provided AOI shapefile. Any user-provided data should be projected to match the planning units.
 
-# Initiate a new project
+## Scripts
 
-`initiate_project.R`
+### Initiate a new project
+
+`01_initiate_project.R`
 
 _Sets up the folder structure and copies the AOI shapefile into the AOI folder._
 
@@ -95,8 +84,7 @@ Outputs
     |--- Regional (_if requested_) <br>
       
 
-
-# Extract the NCC 1km grid covering the AOI
+### Extract the NCC 1km grid covering the AOI
 
 `aoi_to_1km_grid.R`
 
@@ -121,26 +109,7 @@ Outputs
 ![](https://user-images.githubusercontent.com/29556279/227652391-f45eca44-71f5-4cc5-9ed9-3ff69b4ce1d2.png)
 
 
-# Create a custom grid
-
-`aoi_to_custom_grid.R`
-
-_This is used when a coarser (e.g. 10 km) or finer (e.g. 10 ha) grid of planning units is required in WTW._
-
-Inputs
-
-- The AOI polygon (AOI/AOI_polygon.shp)
-- The required grid cell size (in units matching the AOI projection)
-
-Outputs
-
-- Creates the grid and saves as:
-  - AOI/AOI.shp
-  - AOI/AOI.tif (raster of 1's)
-  - AOI/AOI0.tif (raster of 0's)
-  
-
-# Extract national data to the AOI 1km grid
+### Extract national data to the AOI 1km grid
 
 `natdata_to_aoi_1km_grid.R`
 
@@ -162,8 +131,8 @@ Outputs
 
 :warning: **Data needed to run this script is not packaged in this repo.**
 
-## National Data:
-### Themes
+#### National Data:
+##### Themes
 
 * Environment and Climate Change Canada Critical Habitat (ECCC_CH)
 * Environment and Climate Change Canada Species at Risk (ECCC_SAR)
@@ -182,7 +151,7 @@ Outputs
 * Rivers
 * Shoreline
 
-### Weights
+##### Weights
 
 * Carbon storage
 * Carbon potential
@@ -195,17 +164,17 @@ Outputs
 * Recreation
 * Freshwater
 
-### Includes
+##### Includes
 
 * Existing Conservation (CPCAD)
 
 
-# Create metadata table
+### Create metadata table
 
 `populate_nat_metadata.R`
 
 _Automates the creation of a metadata .csv table that is used in `wtw_formatting.R`._
-_Once created, the metadata csv table should be manually QC'd before proceding to  `wtw_formatting.R`._
+_Once created, the metadata csv table should be manually QC'd before proceeding to  `wtw_formatting.R`._
 
 :note: If using REGIONAL data, the metadata table must be created manually (or edited manually if using both NATIONAL and REGIONAL data).
 
@@ -218,7 +187,7 @@ Outputs
 - All rasters are copied into the Tiffs folder
 - The metadata csv table to be QC'd and passed to `wtw_formatting.R`
 
-### metadata table columns
+##### metadata table columns
 (you can view a QC'd version [here.](https://github.com/NCC-CNC/wheretowork-input-formatting/blob/main/WTW/metadata/sw-on-metadata-NEEDS-QC.csv)):
 
 - **Type** <br>
@@ -278,7 +247,7 @@ If Type is theme, provide a goal for the layer when `wheretowork` is initialized
 Available choices: a number between 0 and 1
 
 
-# Format data for Where To Work
+### Format data for Where To Work
 
 `wtw_formatting.R`
 
