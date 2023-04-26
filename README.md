@@ -141,7 +141,7 @@ Outputs
   - National/Excludes
 - a csv that lists the species intersecting the aoi (saved in National/Themes/SPECIES.csv)
 
-:warning: **Data needed to run this script is not packaged in this repo.**
+**Warning** **Data needed to run this script is not packaged in this repo.**
 
 #### National Datasets
 ##### Themes
@@ -188,7 +188,7 @@ Outputs
 _Automates the creation of a metadata .csv table that is used in `wtw_formatting.R`._
 _Once created, the metadata csv table should be manually QC'd before proceeding to  `wtw_formatting.R`._
 
-:note: If using REGIONAL data, the metadata table must be created manually (or edited manually if using both NATIONAL and REGIONAL data).
+**Note** If using REGIONAL data, the metadata table must be created manually (or edited manually if using both NATIONAL and REGIONAL data).
 
 Inputs
 
