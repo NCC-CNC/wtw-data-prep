@@ -20,7 +20,7 @@ The objective of these scripts is to get the WTW data into a standardized set of
 
 3. Some users may wish to use only their own datasets in which case they need to prepare all the input data using the 1km national grid, or an alternate custom grid. See the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example) folder for scripts to do this.
 
-Note: users using a custom grid for planning units who want to add the standard national datasets will need to access the original raster or vector versions of these datasets and apply them in workflow 3. The pre-prepped [national datasets](#national-datasets) can only be used with the standard NCC 1km grid.
+> **Note** users using a custom grid for planning units who want to add the standard national datasets will need to access the original raster or vector versions of these datasets and apply them in workflow 3. The pre-prepped [national datasets](#national-datasets) can only be used with the standard NCC 1km grid.
 
 
 ## National data
@@ -71,9 +71,7 @@ WTW runs prioritizations using the values assigned to each planning unit from th
 
 ## Scripts
 
-### Initiate a new project
-
-`01_initiate_project.R`
+### `01_initiate_project.R`
 
 _Sets up the folder structure and copies the AOI shapefile into the PU folder._
 
@@ -96,9 +94,7 @@ Outputs
     |--- Regional (_if requested_) <br>
       
 
-### Extract the NCC 1km grid covering the AOI
-
-`aoi_to_1km_grid.R`
+### `aoi_to_1km_grid.R`
 
 _Creates the planning unit grid using all NCC 1km grid cells that intersect the AOI._
 
@@ -121,11 +117,9 @@ Outputs
 ![](https://user-images.githubusercontent.com/29556279/227652391-f45eca44-71f5-4cc5-9ed9-3ff69b4ce1d2.png)
 
 
-### Extract national data to the 1km PU grid
+### `natdata_to_1km_pu_grid.R`
 
-`natdata_to_1km_pu_grid.R`
-
-_Used in conjunction with aoi_to_1km_grid.R to prepare NATIONAL data for the AOI._
+_Used in conjunction with aoi_to_1km_grid.R to extract pre-prepped 1km NATIONAL data to the planning units._
 
 Inputs
 
@@ -141,7 +135,7 @@ Outputs
   - National/Excludes
 - a csv that lists the species intersecting the aoi (saved in National/Themes/SPECIES.csv)
 
-**Warning** **Data needed to run this script is not packaged in this repo.**
+> **Warning** Data needed to run this script is not packaged in this repo.
 
 #### National Datasets
 ##### Themes
@@ -181,9 +175,7 @@ Outputs
 * Existing Conservation (CPCAD)
 
 
-### Create metadata table
-
-`populate_nat_metadata.R`
+### `populate_nat_metadata.R`
 
 _Automates the creation of a metadata .csv table that is used in `wtw_formatting.R`._
 _Once created, the metadata csv table should be manually QC'd before proceeding to  `wtw_formatting.R`._
@@ -259,9 +251,7 @@ If Type is theme, provide a goal for the layer when `wheretowork` is initialized
 Available choices: a number between 0 and 1
 
 
-### Format data for Where To Work
-
-`wtw_formatting.R`
+### `wtw_formatting.R`
 
 _Creates the four files required by WTW._
 
