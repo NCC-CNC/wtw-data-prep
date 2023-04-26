@@ -61,8 +61,12 @@ WTW runs prioritizations using the values assigned to each planning unit from th
 ## Definitions
 
 **NCC grid** - the NCC 1km that covers all of Canada.
+
 **AOI** - area of interest, usually a polygon defining the study region for a WTW project.
-**Planning units (PU)** - the 'building blocks' used in WTW to construct solutions. In this case the PU's are the NCC grid cells that intersect with the AOI. In other projects PU's could be a different sized grid, or any collection of non-overlapping polygons.
+
+**Planning units (PU)** - the 'building blocks' used in WTW to construct solutions. In this case the PU's are the NCC grid cells that intersect with the AOI. In other projects PU's could be a different sized grid, or any collection of non-overlapping polygons. The goal of the data prep workflow is to summarise each input dataset within each planning unit.
+
+**Input datasets** - The data representing Themes, Weights, Includes and Excludes to be used in WTW. Each inut dataset needs to described by a single value in every planning unit.
 
 
 ## Scripts
