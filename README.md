@@ -45,7 +45,7 @@ Any user provided datasets that are not part of the standard [national datasets]
 
 WTW runs prioritizations using the values assigned to each planning unit from the input data. It's important that users of WTW understand what their data represent, especially for users adding their own data into the tool.
 
-- **area**, **length** or **count**: Many datasets simply represent the area, length or count of a given feature in each planning unit. Examples include species range data, the density of rivers or roads, or the count of specific sites.
+- **Area**, **length** or **count**: Many datasets simply represent the area, length or count of a given feature in each planning unit. Examples include species range data, the density of rivers or roads, or the count of specific sites.
 
 - **Simple summaries** - Some data have their own units that are carried though to WTW. Examples include carbon storage which can be expressed as tonnes of C per planning unit. In this case the source data are raster values that can be summed within each planning unit.
 
