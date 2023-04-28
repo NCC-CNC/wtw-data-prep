@@ -10,12 +10,15 @@ in Where to Work. The general workflow is as follows:
 4. Convert planning unit values to standardized rasters
 5. Use the rasters and meta data to create the Where to Work input files.
 
+![image](https://user-images.githubusercontent.com/10728298/235233523-83cf0878-774b-4650-8c28-b36404e545dd.png)
+
+
 This workflow uses some of the standard scripts such as `initiate_project.R`, 
 `aoi_to_custom_grid.R` amd `wtw_formatting.R`. It also adds a number of
 additional scripts to prepare, check and intersect the vector and raster
 data.
 
-:note: These scripts provide a semi-automated workflow to help users prep data.
+> **Note** These scripts provide a semi-automated workflow to help users prep data.
 Users do however need to have a good understanding of their data before
 running these scripts. Different data formats can be accommodated and users
 need to understand their data in order to select the correct workflows. Users
@@ -44,7 +47,7 @@ folder after initializing the project:
     
 
 All vector data in a given folder should be stored in (one or multiple) file
-geodatabses. All raster data should be stored in .tif files. All Theme data should
+geodatabases. All raster data should be stored in .tif files. All Theme data should
 be stored in sub-folders where the sub-folder name is the Theme name. For 
 example a real input data folder might look like this:
 
