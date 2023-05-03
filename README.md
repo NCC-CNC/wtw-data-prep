@@ -287,3 +287,10 @@ The attribute file defines the cell values of each theme, weight, include and ex
 4. **boundary.csv.gz:** <br>
 The boundary file defines the adjacency table of each theme, weight, include and exclude. It stores information on the perimeter and shared boundary lengths of the planning units. This is needed to run optimizations for spatial clustering.
 
+<br/>
+<br/>
+<br/>
+
+# 
+<div style="font-size:12px">Icons made by <a target="_blank" rel="noopener noreferrer" href="https://www.freepik.com" title="Freepik">Freepik</a> from <a target="_blank" rel="noopener noreferrer" href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+      </div>
