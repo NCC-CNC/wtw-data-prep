@@ -28,7 +28,7 @@ The objective of these scripts is to get the source data into a standardized set
     - Some users may wish to add some additional datasets to workflow 1. This requires the user to prepare thier own raster datasets to supplement the standard set of national data.
     - Some users may wish to run WTW with thier own set of input datasets specific to their region. They might use the standard 1km grid as planning units or another custom grid.
 
-![image](https://user-images.githubusercontent.com/10728298/235223407-7a3db65b-82f1-4614-8c4b-7fcf6c07e824.png)
+![image](https://user-images.githubusercontent.com/10728298/236043222-32bacd22-e097-4a51-b378-d39ce2f36093.png)
 
 > **Note** Users using a custom grid for planning units who want to add the standard national datasets will need to access the original raster or vector versions of these datasets and apply them in workflow 2. The pre-prepped [national datasets](#national-datasets) can only be used with the standard NCC 1km grid.
 
