@@ -6,7 +6,8 @@ This workflow is described in the main [readMe](https://github.com/NCC-CNC/wtw-d
 In some cases a user may want planning units that are not square grid cells and cannot be represented as a raster. For these
 cases, Where to Work can accept planning unit input data as shapefiles in the following two formats:
 
-1. The four WTW input files described in the [readMe](https://github.com/NCC-CNC/wtw-data-prep), where the spatial input file 
+**Four standard WTW input files, with shapefile planning units** 
+The four WTW input files described in the [readMe](https://github.com/NCC-CNC/wtw-data-prep), where the spatial input file 
 is a shapefile and each planning unit is a polygon defined in the shapefile. The other three input files are the same as the
 standard raster workflow. This is the preferred input format when non-grid  planning units are required (i.e. the planning 
 units cannot be represented in a raster grid).
@@ -14,11 +15,11 @@ units cannot be represented in a raster grid).
 ![image](https://user-images.githubusercontent.com/10728298/236540944-baa83277-74de-4d87-aa29-03d57a9c5d61.png)
 
 The scripts to run this workflow are similar to those in the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/regional_example) 
-folder. The main changes are that instead of creating raster planning units we use a shapefile of polygons. In this example we'll
-create some hexagons to act as the planning units. The other change is to the wtw_formatting.R script which has some edits to deal
-with the vector data planning units.
+folder. The main changes are that instead of creating raster planning units we use a shapefile of polygons. The other change is to the 
+wtw_formatting.R script which has some edits to deal with the vector data planning units.
 
-2. A single shapefile where each polygon represents a planning unit and each column in the attribute table represents values for a Theme, 
+**Single shapefile containing all input values** 
+A single shapefile where each polygon represents a planning unit and each column in the attribute table represents values for a Theme, 
 Includes, Excludes or Weight. The shapefile can be loaded into Where to Work using the **upload shapefile** option. Once loaded, some 
 dropdown options will appear where the user can select all the Themes, Weights, Includes and Excludes.
 
