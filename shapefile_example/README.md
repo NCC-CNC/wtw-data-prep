@@ -104,5 +104,5 @@ option. The recommended workflow however is to pass this shapefile into
 - This script prepares the Where to Work input files. It uses the
 meta data table and the planning unit shapefile to create the four Where to Work 
 input files. This script is an adapted version of 
-[05_wtw_formatting.R](https://github.com/NCC-CNC/wtw-data-prep/blob/main/scripts/05_wtw_formatting.R)
+[wtw-data-prep/scripts/05_wtw_formatting.R](https://github.com/NCC-CNC/wtw-data-prep/blob/main/scripts/05_wtw_formatting.R)
 which creates shapefile instead of raster planning units.
