@@ -16,12 +16,26 @@ The objective of these scripts is to get the WTW data into a standardized set of
 
 1. The most common workflow is to use NCC's standard 1km grid as the planning units, and the standard set of [national datasets](#national-datasets) that have been pre-prepped into the 1km grid. This workflow simply extracts the 1km planning units and the pre-prepped data for all planning units covering the AOI.
 
-2. Some users may wish to add some additional datasets to workflow 1. This requires the user to prepare thier own raster datasets to supplement the standard set of national data. This typically involves intersecting the data to the planning unit grid and summarizing the data values per planning unit. See the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example) folder for scripts to do this.
+2. Some users may wish to add some additional datasets to workflow 1, to replace the standard national datasets with their own regional data, and/or to use a different sized planning unit grid. This requires the user to prepare thier own raster datasets to supplement the standard set of national data. This typically involves intersecting the data to the planning unit grid and summarizing the data values per planning unit. See the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example) folder for scripts to do this.
 
-3. Some users may wish to use only their own datasets in which case they need to prepare all the input data using the 1km national grid, or an alternate custom grid. See the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example) folder for scripts to do this.
+3. Some users may wish to use a non-grided set of planning units. This involves intersecting the data to the planning units and providing shapefile instead of raster inputs to Where to Work. See the [shapefile_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/shapefile_example) folder for scripts to do this.
 
-> **Note** users using a custom grid for planning units who want to add the standard national datasets will need to access the original raster or vector versions of these datasets and apply them in workflow 3. The pre-prepped [national datasets](#national-datasets) can only be used with the standard NCC 1km grid.
+> **Note** users using custom planning units who want to add the standard national datasets will need to access the original raster or vector versions of these datasets and apply them in workflow 2 or 3. The pre-prepped [national datasets](#national-datasets) can only be used with the standard NCC 1km grid.
 
+
+## Where to Work data formats
+
+There are three main formats that Where to Work will accept for loading data:
+
+1. The four WTW input files desribed [below](#wtw_formatting.R), where the spatial input file is a raster and each planning unit is a cell in the raster grid.
+This is the preferred input format because it's the fastest to prepare and load into WTW.
+
+2. The four WTW input files desribed [below](#wtw_formatting.R), where the spatial input file is a shapefile and each planning unit is a polygon defined in the shapefile.
+This is the preferred input format when non-grid planning units are required (i.e. the planning units cannot be represented in a raster grid).
+
+3. A single shapefile where each polygon represents a planning unit and each column in the attribute table represents a Theme, Includes, Excludes or Weight. This format is
+not recommended because it's slower to load, and requires all WTW parameters to be set manually in the app instead of being defined in the input data. See the
+[shapefile_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/shapefile_example) for more details.
 
 ## National data
 
@@ -270,6 +284,7 @@ The configuration file defines project attributes, legend elements / map display
 2. **spatial.tif:** <br>
 The spatial tiff file defines the spatial properties of the planning units, 
 such as cell size, extent, number of rows, number of columns and coordinate reference system. It acts as the template to build rasters from columns within the attribute.csv.gz.
+> **Note** The spatial file can also be a shapefile where each planning unit is a different polygon. 
 
 3. **attribute.csv.gz:** <br>
 The attribute file defines the cell values of each theme, weight, include and exclude in tabular form. Each column in the .csv is a variable. 
