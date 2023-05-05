@@ -6,29 +6,28 @@ This workflow is described in the main [readMe](https://github.com/NCC-CNC/wtw-d
 In some cases a user may want planning units that are not square grid cells and cannot be represented as a raster. For these
 cases, Where to Work can accept planning unit input data as shapefiles in the following two formats:
 
-**Four standard WTW input files, with shapefile planning units** 
-The four WTW input files described in the [readMe](https://github.com/NCC-CNC/wtw-data-prep), where the spatial input file 
-is a shapefile and each planning unit is a polygon defined in the shapefile. The other three input files are the same as the
-standard raster workflow. This is the preferred input format when non-grid  planning units are required (i.e. the planning 
-units cannot be represented in a raster grid).
+**1. Four standard WTW input files, with shapefile planning units:** The four WTW input files described in the 
+[readMe](https://github.com/NCC-CNC/wtw-data-prep), where the spatial input file is a shapefile and each planning unit is a 
+polygon defined in the shapefile. The other three input files are the same as the standard raster workflow. This is the preferred 
+input format when non-grid  planning units are required (i.e. the planning units cannot be represented in a raster grid).
 
 ![image](https://user-images.githubusercontent.com/10728298/236540944-baa83277-74de-4d87-aa29-03d57a9c5d61.png)
 
 The scripts to run this workflow are similar to those in the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/regional_example) 
 folder. The main changes are that instead of creating raster planning units we use a shapefile of polygons. The other change is to the 
-wtw_formatting.R script which has some edits to deal with the vector data planning units.
+`wtw_formatting.R` script which has some edits to deal with the vector data planning units.
 
-**Single shapefile containing all input values** 
-A single shapefile where each polygon represents a planning unit and each column in the attribute table represents values for a Theme, 
-Includes, Excludes or Weight. The shapefile can be loaded into Where to Work using the **upload shapefile** option. Once loaded, some 
-dropdown options will appear where the user can select all the Themes, Weights, Includes and Excludes.
+**2. Single shapefile containing all input values:** A single shapefile where each polygon represents a planning unit and each column in 
+the attribute table represents values for a Theme, Includes, Excludes or Weight. The shapefile can be loaded into Where to Work using 
+the **upload shapefile** option. Once loaded, some dropdown options will appear where the user can assign each input column to a Theme, 
+Weight, Include or Exclude.
 
 Due to the processing required for Where to Work to load and interpret the data (and select color schemes and legends for each feature), 
 the number of columns in the shapefile should be limited to approximately 10. This input format is generally not recommended because 
 it's slower to load, and requires all WTW parameters to be set manually in the app instead of being defined in the input data. It also
 offers the user less control over the colors and legends, and it cannot process as many input datasets.
 
-![image](https://user-images.githubusercontent.com/10728298/236540991-590fecc4-c1a4-4f5d-af8a-6902d15ae5c0.png)
+![image](https://user-images.githubusercontent.com/10728298/236546666-d2c237ee-eede-4d74-ab1e-722b8acb0c99.png)
 
 The input shapefile for this workflow is the same shapefile passed to `07_wtw_formatting.R` in the scripts described below.
 It is the result of intersecting and extracting all input data into the planning unit shapefile. The only reason to use this format
@@ -54,8 +53,7 @@ and do not have to cover the entire AOI.
 #### 03_initialize_metadata.R
 
 - This scripts creates the meta data table and attempts to fill it using the
-datasets stored in the `Regional` folder (using the folder format described in
-[Input data](#input-data)).
+datasets stored in the `Regional` folder.
 - All data must in .gdb and .tif formats for this script to work. If other
 formats are required, contact marc.edwards@natureconservancy.ca.
 
