@@ -19,15 +19,18 @@ The objective of these scripts is to get the source data into a standardized set
 
 1. The most common workflow is to use NCC's standard 1km grid as the planning units, and the standard set of [national datasets](#national-datasets) that have been pre-prepped into the 1km grid. This workflow simply extracts the 1km planning units and the pre-prepped data for all planning units covering the AOI.
 
+![image](https://user-images.githubusercontent.com/10728298/235223330-bdb782d5-83a5-4a9e-a61b-068a7d5681d1.png)
+
 2. Some users may wish to add some additional datasets to workflow 1, to replace the standard national datasets with their own regional data, and/or to use a different sized planning unit grid. This requires the user to prepare thier own raster datasets to supplement the standard set of national data. This typically involves intersecting the data to the planning unit grid and summarizing the data values per planning unit. See the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example) folder for scripts to do this.
+
+![image](https://user-images.githubusercontent.com/10728298/236043222-32bacd22-e097-4a51-b378-d39ce2f36093.png)
+
+<br/>
 
 3. Some users may wish to use a non-grided set of planning units. This involves intersecting the data to the planning units and providing shapefile instead of raster inputs to Where to Work. See the [shapefile_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/shapefile_example) folder for scripts to do this.
 
-> **Note** users using custom planning units who want to add the standard national datasets will need to access the original raster or vector versions of these datasets and apply them in workflow 2 or 3. The pre-prepped [national datasets](#national-datasets) can only be used with the standard NCC 1km grid.
+> **Note** Users using custom planning units who want to add the standard national datasets will need to access the original raster or vector versions of these datasets and apply them in workflow 2 or 3. The pre-prepped [national datasets](#national-datasets) can only be used with the standard NCC 1km grid.
 
-![image](https://user-images.githubusercontent.com/10728298/235223330-bdb782d5-83a5-4a9e-a61b-068a7d5681d1.png)
-
-<br/>
 
 ## Definitions
 
@@ -38,7 +41,6 @@ The objective of these scripts is to get the source data into a standardized set
 **Planning units (PU)** - the 'building blocks' used in WTW to construct solutions. In workflow 1 the PU's are the NCC grid cells that intersect with the AOI. In other workflows PU's could be a different sized grid, or any collection of non-overlapping polygons. The goal of the data prep workflow is to summarise each input dataset within each planning unit.
 
 **Input datasets** - The data representing Themes, Weights, Includes and Excludes to be used in WTW. Each inut dataset needs to described by a single value in every planning unit.
-
 
 
 ## Where to Work data formats
