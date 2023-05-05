@@ -11,7 +11,7 @@ is a shapefile and each planning unit is a polygon defined in the shapefile. The
 standard raster workflow. This is the preferred input format when non-grid  planning units are required (i.e. the planning 
 units cannot be represented in a raster grid).
 
-**ADD WORKFLOW IMAGE HERE**
+![image](https://user-images.githubusercontent.com/10728298/236540944-baa83277-74de-4d87-aa29-03d57a9c5d61.png)
 
 The scripts to run this workflow are similar to those in the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/regional_example) 
 folder. The main changes are that instead of creating raster planning units we use a shapefile of polygons. In this example we'll
@@ -27,7 +27,7 @@ the number of columns in the shapefile should be limited to approximately 10. Th
 it's slower to load, and requires all WTW parameters to be set manually in the app instead of being defined in the input data. It also
 offers the user less control over the colors and legends, and it cannot process as many input datasets.
 
-**ADD WORKFLOW IMAGE HERE**
+![image](https://user-images.githubusercontent.com/10728298/236540991-590fecc4-c1a4-4f5d-af8a-6902d15ae5c0.png)
 
 The input shapefile for this workflow is the same shapefile passed to `07_wtw_formatting.R` in the scripts described below.
 It is the result of intersecting and extracting all input data into the planning unit shapefile. The only reason to use this format
