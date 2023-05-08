@@ -59,7 +59,7 @@ not recommended because it's slower to load, and requires all WTW parameters to 
 
 ## National data
 
-The following scripts in this repo are used to prepare the standard [national datasets](#national-datasets) using the NCC 1km planning units (i.e. workflow 1 described above). More details on each script are provided in the [scripts](#script) section. We recommend making an empty project folder and using RStudio to start a new RSudio project in that folder. Copy the `scripts` folder from this repo into the project folder:
+The following scripts in this repo are used to prepare the standard [national datasets](#national-datasets) using the NCC 1km planning units (i.e. workflow 1 described above). More details on each script are provided in the [scripts](#scripts) section. We recommend making an empty project folder and using RStudio to start a new RSudio project in that folder. Copy the `scripts` folder from this repo into the project folder:
 
 -   `01_initiate_project.R` - sets up folder structure, saves AOI.shp
 -   `02_aoi_to_1km_grid.R` - extracts the NCC 1km grid cells intersecting the AOI. Saves the grid in vector and raster formats.
