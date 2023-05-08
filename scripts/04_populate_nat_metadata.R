@@ -455,7 +455,7 @@ for (file in file_list) {
   } else if (startsWith(file_no_ext, "W_Connectivity")) {
     unit <- "current density"    
     ### Climate, HFI  
-  } else if (file_no_ext %in% c("W_Climate_forward_velocity", "W_Climate_refugia", "W_Climate_extremes", "W_Human_footprint")) {
+  } else if (file_no_ext %in% c("W_Climate_shortest_path", "W_Climate_refugia", "W_Climate_extremes", "W_Human_footprint")) {
     unit <- "index" 
     ### Freshwater, Recreation  
   } else if (any(startsWith(file_no_ext, c("W_Freshwater", "W_Recreation")))) {
