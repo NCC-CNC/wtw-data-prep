@@ -43,7 +43,7 @@ The objective of these scripts is to get the source data into a standardized set
 **Input datasets** - The data representing Themes, Weights, Includes and Excludes to be used in WTW. Each inut dataset needs to described by a single value in every planning unit.
 
 
-## Where to Work data formats
+## Where to Work input data formats
 
 There are three main formats that Where to Work will accept for loading data:
 
@@ -57,9 +57,21 @@ This is the preferred input format when non-grid planning units are required (i.
 not recommended because it's slower to load, and requires all WTW parameters to be set manually in the app instead of being defined in the input data. See the
 [shapefile_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/shapefile_example) for more details.
 
+
+## Planning unit data formats
+
+WTW runs prioritizations using the values assigned to each planning unit from the input data. All input data need to be represented by a single value in each planning unit. It's important that users of WTW understand what their data represent, especially for users adding their own data into the tool.
+
+- **Area**, **length** or **count**: Many datasets simply represent the area, length or count of a given feature in each planning unit. Examples include species range data (e.g. km2 per planning unit), the density of rivers or roads (e.g. km per planning unit), or the count of specific sites (e.g. count per planning unit).
+
+- **Simple summaries** - Some data have their own units that are carried though to WTW. Examples include carbon storage which can be expressed as tonnes of C per planning unit. In this case the source data are raster values that can be summed within each planning unit.
+
+- **Complex summaries** - Some data may require more complex summaries to get meaningful values per planning unit. An example could be the weighted average stream order for a user looking to prioritize headwaters.
+
+
 ## National data
 
-The following scripts in this repo are used to prepare the standard [national datasets](#national-datasets) using the NCC 1km planning units (i.e. workflow 1 described above). More details on each script are provided in the [scripts](#script) section. We recommend making an empty project folder and using RStudio to start a new RSudio project in that folder. Copy the `scripts` folder from this repo into the project folder:
+The following scripts in this repo are used to prepare the standard [national datasets](#national-datasets) using the NCC 1km planning units (i.e. workflow 1 described above). More details on each script are provided in the [scripts](#scripts) section. We recommend making an empty project folder and using RStudio to start a new RSudio project in that folder. Copy the `scripts` folder from this repo into the project folder:
 
 -   `01_initiate_project.R` - sets up folder structure, saves AOI.shp
 -   `02_aoi_to_1km_grid.R` - extracts the NCC 1km grid cells intersecting the AOI. Saves the grid in vector and raster formats.
@@ -73,17 +85,6 @@ The following scripts in this repo are used to prepare the standard [national da
 ## Regional data
 
 Any user provided datasets that are not part of the standard [national datasets](#national-datasets) are referred to as **Regional data**. These are typically vector or raster layers that need to be summarized per planning unit. An example workflow for this is provided in the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example) folder.
-
-
-## Data formats
-
-WTW runs prioritizations using the values assigned to each planning unit from the input data. It's important that users of WTW understand what their data represent, especially for users adding their own data into the tool.
-
-- **Area**, **length** or **count**: Many datasets simply represent the area, length or count of a given feature in each planning unit. Examples include species range data, the density of rivers or roads, or the count of specific sites.
-
-- **Simple summaries** - Some data have their own units that are carried though to WTW. Examples include carbon storage which can be expressed as tonnes of C per planning unit. In this case the source data are raster values that can be summed within each planning unit.
-
-- **Complex summaries** - Some data may require more complex summaries to get meaningful values per planning unit. An example could be the weighted average stream order for a user looking to prioritize headwaters.
 
 
 ## Projections
