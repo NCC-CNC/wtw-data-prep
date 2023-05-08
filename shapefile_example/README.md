@@ -13,7 +13,7 @@ input format when non-grid  planning units are required (i.e. the planning units
 
 ![image](https://user-images.githubusercontent.com/10728298/236540944-baa83277-74de-4d87-aa29-03d57a9c5d61.png)
 
-The scripts to run this workflow are similar to those in the [regional_example](https://github.com/NCC-CNC/wtw-data-prep/regional_example) 
+The scripts to run this workflow are similar to those in the [regional_example]([https://github.com/NCC-CNC/wtw-data-prep/regional_example)](https://github.com/NCC-CNC/wtw-data-prep/tree/main/regional_example)) 
 folder. The main changes are that instead of creating raster planning units we use a shapefile of polygons. The other change is to the 
 `wtw_formatting.R` script which has some edits to deal with the vector data planning units.
 
