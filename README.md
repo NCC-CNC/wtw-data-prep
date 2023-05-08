@@ -43,7 +43,7 @@ The objective of these scripts is to get the source data into a standardized set
 **Input datasets** - The data representing Themes, Weights, Includes and Excludes to be used in WTW. Each inut dataset needs to described by a single value in every planning unit.
 
 
-## Where to Work input formats
+## Where to Work input data formats
 
 There are three main formats that Where to Work will accept for loading data:
 
@@ -58,7 +58,7 @@ not recommended because it's slower to load, and requires all WTW parameters to 
 [shapefile_example](https://github.com/NCC-CNC/wtw-data-prep/tree/main/shapefile_example) for more details.
 
 
-## Planning unit data types
+## Planning unit data formats
 
 WTW runs prioritizations using the values assigned to each planning unit from the input data. All input data need to be represented by a single value in each planning unit. It's important that users of WTW understand what their data represent, especially for users adding their own data into the tool.
 
