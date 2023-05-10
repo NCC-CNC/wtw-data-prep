@@ -131,7 +131,7 @@ weight_values <- metadata$Values[metadata$Type == "weight"]
 
 ## Prepare include inputs ----
 include_data <- raster_data[[which(metadata$Type == "include")]]
-include_data <- round(include_data > 0.5)
+include_data <- raster::reclassify(include_data, matrix(c(-Inf,0.5,0, 0.5,Inf,1), ncol = 3, byrow = TRUE))
 include_names <- metadata$Name[metadata$Type == "include"]
 include_colors <- metadata$Color[metadata$Type == "include"]
 include_units <- metadata$Unit[metadata$Type == "include"]
@@ -144,7 +144,7 @@ include_hidden <- metadata$Hidden[metadata$Type == "include"]
 ## Prepare exclude inputs ----
 exclude_data <- raster_data[[which(metadata$Type == "exclude")]]
 if (length(exclude_data) > 0) {
-  exclude_data <- round(exclude_data > 0.5)
+  exclude_data <- raster::reclassify(exclude_data, matrix(c(-Inf,0.5,0, 0.5,Inf,1), ncol = 3, byrow = TRUE))
   exclude_names <- metadata$Name[metadata$Type == "exclude"]
   exclude_colors <- metadata$Color[metadata$Type == "exclude"]
   exclude_units <- metadata$Unit[metadata$Type == "exclude"]
