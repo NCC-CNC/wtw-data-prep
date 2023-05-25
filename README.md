@@ -199,6 +199,22 @@ Outputs
 * Existing Conservation (CPCAD)
 
 
+### `03b_summarize_species.R`
+
+_Optional scripts, run after `03_natdata_to_1km_pu_grid.R` to list the species intersecting the AOI._
+
+Inputs
+
+- Project directory
+- Pre-prepped national data
+
+Outputs
+
+- a csv that lists the species intersecting the aoi (saved in National/Themes/SPECIES.csv)
+
+> **Warning** Data needed to run this script is not packaged in this repo.
+
+
 ### `04_populate_nat_metadata.R`
 
 _Automates the creation of a metadata .csv table that is used in `05_wtw_formatting.R`._
