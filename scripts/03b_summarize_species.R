@@ -11,22 +11,28 @@
 # Outputs: 1. a csv that lists the species that intersect the aoi 
 #
 #===============================================================================
-
 # Start timer
 start_time <- Sys.time()
 
-# Load packages
+# 1.0 Load packages ------------------------------------------------------------
+
 library(dplyr)
 library(readr)
 library(readxl)
 library(stringr)
 source("scripts/functions/fct_sci_to_common.R") # <--- CHANGE IF NOT RUNNING SCRIPT FROM GITHUB FOLDER
 
+
+# 2.0 Set up -------------------------------------------------------------------
+
 # INPUT 1: Set root folder ----
 project_folder <- "data/output"
 
 # INPUT 2: Set csv path ----
 output_csv <- "/National/Themes/SPECIES.csv" 
+
+
+# 3.0 Processing ---------------------------------------------------------------
 
 # Read-in look up tables ----
 table_path <- file.path(project_folder, "National", "_Tables")
@@ -129,6 +135,7 @@ for (tiff in tiffs) {
 
 # OUTPUT 1: write species data.frame to disk 
 write.csv(df, file.path(project_folder, output_csv), row.names = FALSE)
+
 
 # End timer
 end_time <- Sys.time()

@@ -18,9 +18,26 @@
 # See https://github.com/NCC-CNC/wtw-data-prep for an explanation of the
 # various workflows
 
+# 1.0 Install required packages ------------------------------------------------------------
+
+## Package names
+packages <- c("raster", "dplyr", "sf", "terra", "fasterize", "prioritizr", 
+              "sp", "stringr", "gdalUtilities", "tibble", "stringr", "readr", 
+              "readxl")
+
+## Install packages not yet installed
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+
+
+# 2.0 Load packages ------------------------------------------------------------
+
 library(sf)
 
-# 01 Set parameters ------------------------------------------------------------
+
+# 3.0 Set up -------------------------------------------------------------------
 
 # Set project parameters
 project_folder <- "../New_Brunswick_test"
@@ -28,7 +45,7 @@ aoi_shp <- "../New_Brunswick_test/input_data/geonb_provinciallimits-limitesprovi
 project_data_type <- "REGIONAL" # NATIONAL or REGIONAL or BOTH
 
 
-# 02 Processing ----------------------------------------------------------------
+# 4.0 Processing ----------------------------------------------------------------
 
 # create folder structure
 dir.create(file.path(project_folder, "PU"), recursive = TRUE)

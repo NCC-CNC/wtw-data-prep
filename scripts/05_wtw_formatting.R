@@ -16,20 +16,11 @@
 #          3. Attribute.csv.gz
 #          3. Boundary.csv.gz
 #
-#
-# 1.0 Load packages ------------------------------------------------------------
-
+#===============================================================================
 ## Start timer
 start_time <- Sys.time()
 
-## Package names
-packages <- c("raster", "dplyr")
-
-## Install packages not yet installed
-installed_packages <- packages %in% rownames(installed.packages())
-if (any(installed_packages == FALSE)) {
-  install.packages(packages[!installed_packages])
-}
+# 1.0 Load packages ------------------------------------------------------------
 
 ## Install wheretowork if not yet installed
 if (!require(wheretowork)) {
@@ -41,6 +32,7 @@ if (!require(wheretowork)) {
 library(raster)
 library(dplyr)
 library(wheretowork)
+
 
 # 2.0 Set up -------------------------------------------------------------------
 
@@ -60,7 +52,7 @@ author_name <- "Dan Wismer" # <----- your name
 author_email <- "dan.wismer@natureconservancy.ca" # <----- your email
 
 
-#-------------------------------------------------------------------------------
+# 3.0 Import meta data and PUs -------------------------------------------------
 
 ## Import formatted csv (metadata) as tibble 
 metadata <- tibble::as_tibble(
@@ -82,7 +74,8 @@ assertthat::assert_that(
 ## Import study area (planning units) raster
 study_area_data <- raster::raster(study_area_file)
 
-# 3.0 Import rasters -----------------------------------------------------------
+
+# 3.1 Import rasters -----------------------------------------------------------
 
 ## Import themes, includes and weights rasters as a raster stack. If raster 
 ## variable does not stack to study area, re-project raster variable so it aligns 
@@ -154,6 +147,7 @@ if (length(exclude_data) > 0) {
   exclude_labels <- metadata$Labels[metadata$Type == "exclude"]
   exclude_hidden <- metadata$Hidden[metadata$Type == "exclude"]
 }
+
 
 # 5.0 Build wheretowork objects ------------------------------------------------
 
@@ -354,6 +348,7 @@ weights <- lapply(seq_len(raster::nlayers(weight_data)), function(i) {
              hidden = weight_hidden[i])
 })
 
+
 # 6.0  Export Where To Work objects --------------------------------------------
 
 ## Save project to disk ---- <--- CHANGE FOR NEW PROJECT
@@ -370,12 +365,13 @@ write_project(
   author_email = author_email 
 )
 
-# 7.0 Clear R environment ------------------------------------------------------ 
 
-## End timer
-end_time <- Sys.time()
-end_time - start_time
+# 7.0 Clear R environment ------------------------------------------------------ 
 
 ## Comment these lines below to keep all the objects in the R session
 rm(list=ls())
 gc()
+
+## End timer
+end_time <- Sys.time()
+end_time - start_time

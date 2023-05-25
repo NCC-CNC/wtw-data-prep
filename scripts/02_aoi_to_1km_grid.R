@@ -17,12 +17,19 @@
 #          3. 1km raster grid (values are all 0)
 #
 #===============================================================================
+# Start timer
+start_time <- Sys.time()
+
+# 1.0 Load packages ------------------------------------------------------------
 
 library(raster)
 library(terra)
 library(sf)
 library(fasterize)
 library(dplyr)
+
+
+# 2.0 Set up -------------------------------------------------------------------
 
 # Input boundary shapefile path
 SHP <- "PU/AOI.shp" # <- CHANGE TO YOUR SHP PATH
@@ -33,7 +40,8 @@ OUTPUT <- "PU" # <- CHANGE TO YOUR OUTPUT FOLDER PATH
 # Read-in constant 1km raster grid
 CONSTANT_1KM <- raster("data/Constant_1KM_IDX.tif") # <- CHANGE TO YOUR GRID PATH
 
-#-------------------------------------------------------------------------------
+
+# 3.0 Processing ---------------------------------------------------------------
 
 # Read-in boundary shapefile
 Boundary <- read_sf(SHP) %>% 
@@ -64,3 +72,8 @@ terra::writeRaster(r_pu, file.path(OUTPUT, "PU.tif"), datatype = "INT1U", overwr
 # Convert all cell values to 0
 r_pu[r_pu > 0] <- 0
 terra::writeRaster(r_pu, file.path(OUTPUT, "PU0.tif"), datatype = "INT1U", overwrite = TRUE)
+
+
+# End timer
+end_time <- Sys.time()
+end_time - start_time

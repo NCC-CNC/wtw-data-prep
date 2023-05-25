@@ -12,20 +12,11 @@
 #
 # Outputs: 1. A metadata.csv to QC (quality control)
 #
-#
-# 1.0 Load packages ------------------------------------------------------------
-
+#===============================================================================
 ## Start timer
 start_time <- Sys.time()
 
-## Package names
-packages <- c("tibble", "raster", "dplyr", "stringr", "readr", "readxl")
-
-## Install packages not yet installed
-installed_packages <- packages %in% rownames(installed.packages())
-if (any(installed_packages == FALSE)) {
-  install.packages(packages[!installed_packages])
-}
+# 1.0 Load packages ------------------------------------------------------------
 
 library(tibble)
 library(raster)
@@ -35,6 +26,7 @@ library(readr)
 library(readxl)
 source("scripts/functions/fct_sci_to_common.R")
 source("scripts/functions/fct_init_metadata.R")
+
 
 # 2.0 Set up -------------------------------------------------------------------
 
@@ -51,6 +43,7 @@ input_pu_name <- "PU.tif"
 
 # NOTE: The datasets required for WTW can be edited at the bottom of the next
 # section by changing the 'WtW' list object
+
 
 # 3.0 Copy to Tiffs ------------------------------------------------------------
 
@@ -110,6 +103,7 @@ for (file in WtW) {
   file.copy(file, paste0(tiff_folder, "/", name, ".tif"))
 }
 
+
 # 4.0 Prep for metadata --------------------------------------------------------
 
 # Read-in look up tables ----
@@ -130,6 +124,7 @@ file_list <- file_list[file_list != pu_path]
 
 ## Build empty data.frame (template for metadata.csv) ----
 df <- init_metadata()
+
 
 # 5.0 Populate metadata --------------------------------------------------------
 
@@ -505,7 +500,6 @@ write.csv(df,
           file.path(metadata_folder, paste0(output_metadata_name, "-metadata-NEEDS-QC.csv")),
           row.names = FALSE)
 
-# 4.0 Clear R environment ------------------------------------------------------ 
 
 ## End timer
 end_time <- Sys.time()

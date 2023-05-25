@@ -12,20 +12,12 @@
 #             the pu's
 #          2. a csv that lists the species that intersect the pu's
 #
+#===============================================================================
+# Start timer
+start_time <- Sys.time()
 
 # 1.0 Load packages ------------------------------------------------------------
 
-## Package names
-packages <- c("sf", "raster", "dplyr", "prioritizr", 
-              "sp", "stringr", "gdalUtilities")
-
-## Install packages not yet installed
-installed_packages <- packages %in% rownames(installed.packages())
-if (any(installed_packages == FALSE)) {
-  install.packages(packages[!installed_packages])
-}
-
-## Load packages
 library(sf)
 library(raster)
 library(dplyr)
@@ -36,12 +28,16 @@ library(gdalUtilities)
 source("scripts/functions/fct_matrix_intersect.R")
 source("scripts/functions/fct_matrix_to_raster.R")
 
+
 # 2.0 Set up -------------------------------------------------------------------
 
 ## Set output folder and PU ----
 input_data_path <- "PRZ_TOOL\DATAPREP\data_20220405" # <--- SET PATH TO PREPPED NATIONAL DATA FOLDER
 pu_path <- "PU/PU.tif"
 pu_data_folder <- "National" # <--- THIS IS THE LOCATION TO STORE THE CLIPPED RASTERS IN THE PROJECT FOLDER
+
+
+# 3.0 prep folders and PUs -----------------------------------------------------
 
 ## Create output folder directory ----
 dir.create(file.path(pu_data_folder))
@@ -100,7 +96,8 @@ aoi_pu <- raster(paste0(tools::file_path_sans_ext(pu_path), "_align.tif"))
 pu_rij <- prioritizr::rij_matrix(ncc_1km, stack(aoi_pu, ncc_1km_idx))
 rownames(pu_rij) <- c("AOI", "Idx")
 
-# 3.0 national data to PU -----------------------------------------------------
+
+# 4.0 national data to PU -----------------------------------------------------
 
 ## ECCC Critical Habitat (theme) ----
 natdata_rij <- readRDS(file.path(input_data_path, "national/species/rij_ECCC_CH.rds"))
@@ -303,7 +300,11 @@ matrix_to_raster(ncc_1km_idx, matrix_overlap, pu_1km0,
                  paste0(pu_data_folder, "/Includes"), "I_", "INT1U")
 
 
-# 4.0 Clear R environment ------------------------------------------------------ 
+# 5.0 Clear R environment ------------------------------------------------------ 
 
 rm(list=ls())
 gc()
+
+# End timer
+end_time <- Sys.time()
+end_time - start_time
