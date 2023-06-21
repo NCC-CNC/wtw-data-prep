@@ -66,3 +66,7 @@ for(i in seq_along(l)){
   # save as rds
   saveRDS(rij, file.path(out_path, paste0(names(l)[i], ".rds")), compress = TRUE)
 }
+
+## End timer
+end_time <- Sys.time()
+end_time - start_time
