@@ -43,16 +43,16 @@ dir.create(out_path)
 
 # Parse tiffs file names into multiple vectors, each vector will be converted
 # into a separate .rds sparse matrix
-# Using Themes, Includes, Weights as an example here
+# Using Themes, Includes+Excludes, Weights as an example here
 
 # vectors of tiffs
 tiffs_T <- list.files(tiffs_path,  pattern = "^T_.*tif$|tiff$", full.names = TRUE)
 tiffs_W <- list.files(tiffs_path,  pattern = "^W_.*tif$|tiff$", full.names = TRUE)
-tiffs_I <- list.files(tiffs_path,  pattern = "^I_.*tif$|tiff$", full.names = TRUE)
+tiffs_I_E <- list.files(tiffs_path, pattern = "^(I|E)_.*tif$|tiff$", full.names = TRUE)
 
 # combine into a list of vectors, list element names will become .rds file names
-l <- list(tiffs_T, tiffs_I, tiffs_W)
-names(l) <- c("themes", "includes", "weights")
+l <- list(tiffs_T, tiffs_I_E, tiffs_W)
+names(l) <- c("themes", "includes_excludes", "weights")
 
 
 # 3.2 Generate matrices --------------------------------------------------------
