@@ -94,6 +94,7 @@ Any user provided datasets that are not part of the standard [national datasets]
 
 
 ## Scripts
+These scripts require R, Rstudio (recommended) and RTools (required for installing wheretowork package) be installed.
 
 ### `01_initiate_project.R`
 
