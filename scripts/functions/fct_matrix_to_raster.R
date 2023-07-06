@@ -23,14 +23,16 @@
 #' `LOG1S`, `INT1S`, `INT1U`, `INT2S`, `INT2U`, `INT4S`, `INT4U`, `FLT4S`, 
 #' `FLT8S`
 
-matrix_to_raster = function(ncc_1km_idx, natdata_intersect, aoi_1km0, 
-                            output_folder, prefix, datatype) {
+matrix_to_raster = function(ncc_1km_idx, 
+                            natdata_intersect, 
+                            aoi_1km0, 
+                            output_folder, 
+                            prefix, 
+                            datatype) {
   
   # Set up placeholder raster
   natdata_raster <- ncc_1km_idx
-  natdata_rasters <- list()
-  
-  
+
   # Set up counter for print message
   len <-  (nrow(natdata_intersect)-2)
   counter <- 1
