@@ -66,24 +66,24 @@ file.copy(
 )
 
 ## Read-in PU .tiff ----
-pu_1km <- raster(pu_path) 
+pu_1km <- rast(pu_path) 
 pu_name <- names(pu_1km)
 pu_1km0 <- pu_1km 
 ### Convert pu to all 0's (was needed for mosaic, but now we crop)... keep for now
 pu_1km0[pu_1km0 > 0] <- 0 
 
 ## Read-in national 1km grid (all of Canada) ----
-ncc_1km <- raster(file.path(input_data_path, "national/_nccgrid/NCC_PU.tif"))
+ncc_1km <- rast(file.path(input_data_path, "_nccgrid/NCC_1KM_PU.tif"))
 ncc_1km_idx <- ncc_1km
 ncc_1km_idx[] <- 1:ncell(ncc_1km_idx) # 267,790,000 available planning units
 
 ## Align pu to same extent and same number of rows/cols as national grid ----
 ### get spatial properties of ncc grid
-proj4_string <- sp::proj4string(ncc_1km) # projection string
-bbox <- raster::bbox(ncc_1km) # bounding box
+proj4_string <- terra::crs(ncc_1km,  proj=TRUE) # projection string
+bbox <- terra::ext(ncc_1km) # bounding box
 ### variables for gdalwarp
-te <- c(bbox[1,1], bbox[2,1], bbox[1,2], bbox[2,2]) # xmin, ymin, xmax, ymax
-ts <- c(raster::ncol(ncc_1km), raster::nrow(ncc_1km)) # ncc grid: columns/rows
+te <- c(bbox[1], bbox[3], bbox[2], bbox[4]) # xmin, ymin, xmax, ymax
+ts <- c(terra::ncol(ncc_1km), terra::nrow(ncc_1km)) # ncc grid: columns/rows
 ### gdalUtilities::gdalwarp does not require a local GDAL installation ----
 gdalUtilities::gdalwarp(srcfile = pu_path,
                         dstfile = paste0(tools::file_path_sans_ext(pu_path), "_align.tif"),
