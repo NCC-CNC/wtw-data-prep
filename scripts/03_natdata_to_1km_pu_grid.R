@@ -19,12 +19,12 @@ start_time <- Sys.time()
 # 1.0 Load packages ------------------------------------------------------------
 
 library(sf)
-library(raster)
+library(terra)
 library(dplyr)
 library(prioritizr)
-library(sp)
 library(stringr)
-library(gdalUtilities) 
+library(gdalUtilities)
+library(Matrix)
 source("scripts/functions/fct_matrix_intersect.R")
 source("scripts/functions/fct_matrix_to_raster.R")
 
