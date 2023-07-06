@@ -59,9 +59,11 @@ dir.create(file.path(pu_data_folder, "Themes", "NSC_END"))
 dir.create(file.path(pu_data_folder, "Themes", "NSC_SAR"))
 dir.create(file.path(pu_data_folder, "Themes", "NSC_SPP"))
 
-# Copy / paste LUT ----
-LUT <- list.files(file.path(input_data_path, "/national/species"), pattern='.xlsx$|.csv$', full.names = T)
-file.copy(LUT, file.path(pu_data_folder, "_Tables"))
+# Copy / paste Species_Metadata.xlsx  ----
+file.copy(
+  file.path(input_data_path, "species/Species_Metadata.xlsx"), 
+  file.path(pu_data_folder, "_Tables")
+)
 
 ## Read-in PU .tiff ----
 pu_1km <- raster(pu_path) 
