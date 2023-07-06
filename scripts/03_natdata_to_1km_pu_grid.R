@@ -102,16 +102,16 @@ rownames(pu_rij) <- c("AOI", "Idx")
 # 4.0 national data to PU -----------------------------------------------------
 
 ## ECCC Critical Habitat (theme) ----
-natdata_rij <- readRDS(file.path(input_data_path, "national/species/rij_ECCC_CH.rds"))
+natdata_rij <- readRDS(file.path(input_data_path, "species/RIJ_ECCC_CH.rds"))
 matrix_overlap <- matrix_intersect(natdata_rij, pu_rij) 
 matrix_to_raster(ncc_1km_idx, matrix_overlap, pu_1km0,
-                 paste0(pu_data_folder, "/Themes/ECCC_CH"), "T_ECCC_CH_", "INT1U")
+                 paste0(pu_data_folder, "/Themes/ECCC_CH"), "", "FLT4S") # no prefix needed
 
 ## ECCC Species at risk (theme) ----
-natdata_rij <- readRDS(file.path(input_data_path, "national/species/rij_ECCC_SAR.rds"))
+natdata_rij <- readRDS(file.path(input_data_path, "species/RIJ_ECCC_SAR.rds"))
 matrix_overlap <- matrix_intersect(natdata_rij, pu_rij) 
 matrix_to_raster(ncc_1km_idx, matrix_overlap, pu_1km0,
-                 paste0(pu_data_folder, "/Themes/ECCC_SAR"), "T_ECCC_SAR_", "INT1U")
+                 paste0(pu_data_folder, "/Themes/ECCC_SAR"), "", "FLT4S") # no prefix needed
 
 ## IUCN Amphibians (theme) ----
 natdata_rij <- readRDS(file.path(input_data_path, "national/species/rij_IUCN_AMPH.rds"))
