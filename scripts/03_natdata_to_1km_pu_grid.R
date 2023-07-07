@@ -67,8 +67,8 @@ file.copy(
 )
 
 ## Read-in PU .tiff ----
-pu_1km <- rast(pu_path) 
-pu_name <- names(pu_1km)
+pu_1km <- rast(pu_path)
+pu_1km_ext <- ext(pu_1km) # get extent
 
 ## Read-in national 1km grid (all of Canada) ----
 ncc_1km <- rast(file.path(input_data_path, "_nccgrid/NCC_1KM_PU.tif"))
