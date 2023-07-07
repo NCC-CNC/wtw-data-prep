@@ -25,6 +25,7 @@ library(gdalUtilities)
 library(Matrix)
 source("scripts/functions/fct_matrix_intersect.R")
 source("scripts/functions/fct_matrix_to_raster.R")
+terra::gdalCache(size = 8000) # set cache to 8gb
 
 
 # 2.0 Set up -------------------------------------------------------------------
