@@ -25,34 +25,31 @@
 
 matrix_to_raster = function(ncc_1km_idx, 
                             natdata_intersect, 
-                            pu_1km, 
+                            pu_1km_ext,
+                            set_na = NULL,
                             output_folder, 
                             prefix, 
                             datatype) {
-  
-  # Set up placeholder raster
-  natdata_raster <- ncc_1km_idx
 
-  # Set up counter for print message
+  # number of rasters to process 
   len <-  (nrow(natdata_intersect)-2)
-  counter <- 1
   
   if (len > 0) {
     # Loop through matrix, exclude AOI and Idx rows
     for (i in 1:(nrow(natdata_intersect)-2)) {
-      natdata_raster[] <- NA # 26,790,000 planning units
+      
+      ncc_1km_idx[] <- NA # 26,790,000 planning units
       name <- rownames(natdata_intersect)[i]
-      print(paste0("... ", counter, " of ", len, ": ",  name))
-      natdata_raster[natdata_intersect["Idx",]] <- natdata_intersect[i,]
-      names(natdata_raster) <- name
+      print(paste0("... ", i, " of ", len, ": ",  name))
+      ncc_1km_idx[natdata_intersect["Idx",]] <- natdata_intersect[i,]
+      names(ncc_1km_idx) <- name
       ## crop raster to AOI
-      cropped <- terra::crop(natdata_raster, pu_1km)
+      cropped <- terra::crop(ncc_1km_idx, pu_1km_ext)
+
       ## write to disk
       writeRaster(cropped, paste0(output_folder, "/", prefix, name,".tif"),
-                  overwrite = TRUE, datatype = datatype)
+                  overwrite = TRUE, datatype = datatype, NAflag = set_na)
       
-      ## advance counter
-      counter <- counter + 1
     }
   
     } else {
