@@ -70,9 +70,6 @@ file.copy(
 ## Read-in PU .tiff ----
 pu_1km <- rast(pu_path) 
 pu_name <- names(pu_1km)
-pu_1km0 <- pu_1km 
-### Convert pu to all 0's (was needed for mosaic, but now we crop)... keep for now
-pu_1km0[pu_1km0 > 0] <- 0 
 
 ## Read-in national 1km grid (all of Canada) ----
 ncc_1km <- rast(file.path(input_data_path, "_nccgrid/NCC_1KM_PU.tif"))
