@@ -43,13 +43,15 @@ matrix_to_raster = function(ncc_1km_idx,
       print(paste0("... ", i, " of ", len, ": ",  name))
       ncc_1km_idx[natdata_intersect["Idx",]] <- natdata_intersect[i,]
       names(ncc_1km_idx) <- name
-      ## crop raster to AOI
-      cropped <- terra::crop(ncc_1km_idx, pu_1km_ext)
-
-      ## write to disk
-      writeRaster(cropped, paste0(output_folder, "/", prefix, name,".tif"),
-                  overwrite = TRUE, datatype = datatype, NAflag = set_na)
-      
+      ## crop raster to PU and save to disk
+      terra::crop(
+        x = ncc_1km_idx, 
+        y = pu_1km_ext,
+        filename = paste0(output_folder, "/", prefix, name,".tif"),
+        overwrite = TRUE,
+        datatype = datatype,
+        NAflag = set_na
+      )
     }
   
     } else {
