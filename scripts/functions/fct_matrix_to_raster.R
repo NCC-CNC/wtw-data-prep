@@ -26,7 +26,6 @@
 matrix_to_raster = function(ncc_1km_idx, 
                             natdata_intersect, 
                             pu_1km_ext,
-                            set_na = NULL,
                             output_folder, 
                             prefix, 
                             datatype) {
@@ -49,8 +48,7 @@ matrix_to_raster = function(ncc_1km_idx,
         y = pu_1km_ext,
         filename = paste0(output_folder, "/", prefix, name,".tif"),
         overwrite = TRUE,
-        datatype = datatype,
-        NAflag = set_na
+        datatype = datatype
       )
     }
   
