@@ -76,8 +76,7 @@ pu_1km_ext <- ext(pu_1km) # get extent
 
 ## Read-in national 1km grid (all of Canada) ----
 ncc_1km <- rast(file.path(input_data_path, "_nccgrid/NCC_1KM_PU.tif"))
-ncc_1km_idx <- ncc_1km
-ncc_1km_idx[] <- 1:ncell(ncc_1km_idx) # 267,790,000 available planning units
+ncc_1km_idx <- terra::init(ncc_1km, fun="cell") # 267,790,000 pu
 ncc_1km_idx_NA <- terra::init(ncc_1km_idx, fun=NA)
 
 ## Align pu to same extent and same number of rows/cols as national grid ----
