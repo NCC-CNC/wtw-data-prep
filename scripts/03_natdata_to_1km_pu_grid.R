@@ -31,7 +31,7 @@ terra::gdalCache(size = 8000) # set cache to 8gb
 # 2.0 Set up -------------------------------------------------------------------
 
 ## Set output folder and PU ----
-input_data_path <- "C:/Data/PRZ/WTW_DATA/WTW_NAT_DATA/WTW_NAT_DATA_20230706" # <--- SET PATH TO PREPPED NATIONAL DATA FOLDER
+input_data_path <- "C:/Data/PRZ/WTW_DATA/WTW_NAT_DATA/WTW_NAT_DATA_20230710" # <--- SET PATH TO PREPPED NATIONAL DATA FOLDER
 
 pu_path <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2/PU/PU.tif"
 
@@ -59,9 +59,14 @@ dir.create(file.path(pu_data_folder, "Themes", "NSC_END"))
 dir.create(file.path(pu_data_folder, "Themes", "NSC_SAR"))
 dir.create(file.path(pu_data_folder, "Themes", "NSC_SPP"))
 
-# Copy / paste Species_Metadata.xlsx  ----
+# Copy / paste metadata  ----
 file.copy(
-  file.path(input_data_path, "species/Species_Metadata.xlsx"), 
+  file.path(input_data_path, "WTW_NAT_SPECIES_METADATA.xlsx"), 
+  file.path(pu_data_folder, "_Tables")
+)
+
+file.copy(
+  file.path(input_data_path, "WTW_NAT_FEATURES_METADATA.xlsx"), 
   file.path(pu_data_folder, "_Tables")
 )
 
