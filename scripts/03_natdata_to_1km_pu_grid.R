@@ -108,63 +108,63 @@ rownames(pu_rij) <- c("AOI", "Idx")
 natdata_rij <- readRDS(file.path(input_data_path, "species/RIJ_ECCC_CH.rds"))
 matrix_overlap <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) %>% gc(verbose = FALSE) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0, 
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 
                  paste0(pu_data_folder, "/Themes/ECCC_CH"), "", "INT2U") # no prefix needed
 
 ## ECCC Species at risk (theme) ----
 natdata_rij <- readRDS(file.path(input_data_path, "species/RIJ_ECCC_SAR.rds"))
 matrix_overlap <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) %>% gc(verbose = FALSE) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0, 
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 
                  paste0(pu_data_folder, "/Themes/ECCC_SAR"), "", "INT2U") # no prefix needed
 
 ## IUCN Amphibians (theme) ----
 natdata_rij <- readRDS(file.path(input_data_path, "species/RIJ_IUCN_AMPH.rds"))
 matrix_overlap <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) %>% gc(verbose = FALSE) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/IUCN_AMPH"), "T_NAT_IUCN_AMPH_", "INT1U")
 
 ## IUCN Birds (theme) ----
 natdata_rij <- readRDS(file.path(input_data_path, "species/RIJ_IUCN_BIRD.rds"))
 matrix_overlap <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) %>% gc(verbose = FALSE) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/IUCN_BIRD"), "T_NAT_IUCN_BIRD_", "INT1U")
 
 ## IUCN Mammals (theme) ----
 natdata_rij <- readRDS(file.path(input_data_path, "species/RIJ_IUCN_MAMM.rds"))
 matrix_overlap <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) %>% gc(verbose = FALSE) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/IUCN_MAMM"), "T_NAT_IUCN_MAMM_", "INT1U")
 
 ## IUCN Reptiles (theme) ----
 natdata_rij <- readRDS(file.path(input_data_path, "species/RIJ_IUCN_REPT.rds"))
 matrix_overlap <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) %>% gc(verbose = FALSE) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/IUCN_REPT"), "T_NAT_IUCN_REPT_", "INT1U")
 
 ## Nature Serve Canada Endemics (theme) ----
 natdata_rij <- readRDS(file.path(input_data_path, "species/RIJ_NSC_END.rds"))
 matrix_overlap <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) %>% gc(verbose = FALSE) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/NSC_END"), "T_NAT_NSC_END_", "INT1U")
 
 ## Nature Serve Canada Species at risk (theme) ----
 natdata_rij <- readRDS(file.path(input_data_path, "species/RIJ_NSC_SAR.rds"))
 matrix_overlap <- matrix_intersect(natdata_rij, pu_rij) 
 rm(natdata_rij) %>% gc(verbose = FALSE) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/NSC_SAR"), "T_NAT_NSC_SAR_", "INT1U")
 
 ## Nature Serve Canada Common Species (theme) ----
 natdata_rij <- readRDS(file.path(input_data_path, "species/RIJ_NSC_SPP.rds"))
 matrix_overlap <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) %>% gc(verbose = FALSE) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/NSC_SPP"), "T_NAT_NSC_SPP_", "INT1U")
 
 ## Forest - LC (theme) ----
@@ -173,7 +173,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Forest-lc")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/LC"), "T_NAT_LC_", "INT2U")
 
 ## Forest - LU (theme) ----
@@ -182,7 +182,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Forest-lu")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/LC"), "T_NAT_LC_", "INT2U")
 
 ## Grassland (theme) ----
@@ -191,7 +191,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Grassland")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij) 
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/LC"), "T_NAT_LC_", "INT2U")
 
 ## Lakes (theme) ----
@@ -200,7 +200,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Lakes")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/LC"), "T_NAT_LC_", "FLT4S")
 
 ## River length (theme) ----
@@ -209,7 +209,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("River_length")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij) 
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/KM"), "T_NAT_KM_", "FLT4S")
 
 ## Shoreline (theme) ----
@@ -218,7 +218,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Shoreline_length")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij) 
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/KM"), "T_NAT_KM_", "FLT4S")
 
 ## Wetlands (theme) ----
@@ -227,7 +227,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Wetlands")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Themes/LC"), "T_NAT_LC_", "FLT4S")
 
 ## Carbon storage (weight) ----
@@ -236,7 +236,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Carbon_storage")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij) 
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Weights"), "W_NAT_", "FLT4S")
 
 ## Carbon potential (weight) ----
@@ -245,7 +245,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Carbon_potential")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij) 
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Weights"), "W_NAT_", "FLT4S")
 
 ## Climate forward velocity (weight) ----
@@ -254,7 +254,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Climate_shortest_path")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Weights"), "W_NAT_", "FLT4S")
 
 ## Climate refugia (weight) ----
@@ -263,7 +263,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Climate_refugia")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij) 
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Weights"), "W_NAT_", "FLT4S")
 
 ## Climate extremes (weight) ----
@@ -272,7 +272,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Climate_extremes")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij) 
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Weights"), "W_NAT_", "FLT4S")
 
 ## Connectivity (weight) ----
@@ -281,7 +281,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Connectivity")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij) 
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Weights"), "W_NAT_", "FLT4S")
 
 ## Human footprint (weight) ----
@@ -290,7 +290,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Human_footprint")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij) 
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Weights"), "W_NAT_", "FLT4S")
 
 ## KBAs (weight) ----
@@ -299,7 +299,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Key_biodiversity_areas")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij) 
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Weights"), "W_NAT_", "FLT4S")
 
 ## Recreation (weight) ----
@@ -308,7 +308,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Recreation")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij) 
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Weights"), "W_NAT_", "FLT4S")
 
 ## Freshwater (weight) ----
@@ -317,7 +317,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Freshwater")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij)
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Weights"), "W_NAT_", "FLT4S")
 
 ## Protected (include) ----
@@ -328,7 +328,7 @@ natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
 rownames(natdata_rij) <- c("Protected")
 matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij) 
 rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext, 0,
+matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(pu_data_folder, "/Includes"), "I_NAT_", "INT1U")
 
 
