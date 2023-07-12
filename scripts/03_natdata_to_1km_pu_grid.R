@@ -99,6 +99,7 @@ aoi_pu <- rast(paste0(tools::file_path_sans_ext(pu_path), "_align.tif"))
 # Create pu_rij matrix: 11,010,932 planing units activated 
 pu_rij <- prioritizr::rij_matrix(ncc_1km, c(aoi_pu, ncc_1km_idx))
 rownames(pu_rij) <- c("AOI", "Idx")
+rm(ncc_1km_idx) %>% gc(verbose = FALSE) # clear some RAM
 
 
 # 4.0 national data to PU -----------------------------------------------------
