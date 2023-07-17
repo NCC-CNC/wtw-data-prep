@@ -1,7 +1,7 @@
 #
-# Author: Dan Wismer 
+# Author: Dan Wismer & Marc Edwards
 #
-# Date: March 29th, 2023
+# Date: July 27th, 2023
 #
 # Description: Copies prepped National rasters to the Tiffs folder.
 #              Generates a metadata.csv for all national layers. This csv is 
@@ -145,7 +145,7 @@ for (i in seq_along(file_list)) {
   
   ## FILE ----------------------------------------------------------------------
   file_no_ext <- paste0(tools::file_path_sans_ext(basename(file_list[i])))
-  file <-  paste0(file_no_ext,".tif")
+  file <-  paste0(file_no_ext, ".tif")
   
   #### message
   print(paste0(file, " (", i, "/", length(file_list), ")"))
