@@ -207,7 +207,7 @@ for (i in seq_along(file_list)) {
   ## VALUES --------------------------------------------------------------------
   if (identical(u_values, 2) && identical(max_value, 1)) {
     values <- "0, 1" # IUCN, NSC, KBA, Includes 
-  } else if (identical(u_values, 2) && identical(max_value, 100)) {
+  } else if (identical(u_values, 2)) {
     values <- paste0("0,", max_value) # ECCC: rare case if only 2 unique values
   } else if (identical(u_values, 1)) {
     values <- max_value # covers entire AOI
