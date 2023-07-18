@@ -5,7 +5,7 @@
 #
 # Description: Copies prepped National rasters to the Tiffs folder.
 #              Generates a metadata.csv for all national layers. This csv is 
-#              a required input for 03_format_data_wtw.R.  
+#              a required input for 05_wtw_formatting.R.  
 #
 # Inputs:  1. A folder of national rasters (from natdata_to_1km_pu_grid.R) 
 #          2. Output names and paths
@@ -24,7 +24,7 @@ library(dplyr)
 library(stringr)
 library(readr)
 library(readxl)
-source("scripts/functions/fct_sci_to_common.R")
+# source("scripts/functions/fct_sci_to_common.R") # <--- NOT NEEDED, KEEP FOR NOW
 source("scripts/functions/fct_init_metadata.R")
 
 
