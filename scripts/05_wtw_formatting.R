@@ -368,10 +368,10 @@ write_project(
 
 # 7.0 Clear R environment ------------------------------------------------------ 
 
-## Comment these lines below to keep all the objects in the R session
-rm(list=ls())
-gc()
-
 ## End timer
 end_time <- Sys.time()
 end_time - start_time
+
+## Comment these lines below to keep all the objects in the R session
+rm(list=ls())
+gc()
