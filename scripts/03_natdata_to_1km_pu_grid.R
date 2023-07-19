@@ -32,7 +32,7 @@ terra::gdalCache(size = 8000) # set cache to 8gb
 ## Set output folder and PU ----
 input_data_path <- "C:/Data/PRZ/WTW_DATA/WTW_NAT_DATA_20230718" # <--- SET PATH TO PREPPED NATIONAL DATA FOLDER
 
-pu_path <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2/PU/PU.tif"
+pu_path <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2/PU/PU.tif" # <--- SET PATH TO PU.tif
 
 nat_folder <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2/National" # <--- THIS IS THE LOCATION TO STORE THE CLIPPED RASTERS IN THE PROJECT FOLDER
 
