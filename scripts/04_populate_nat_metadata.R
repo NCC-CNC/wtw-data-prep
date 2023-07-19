@@ -27,7 +27,6 @@ library(readxl)
 # source("scripts/functions/fct_sci_to_common.R") # <--- NOT NEEDED, KEEP FOR NOW
 source("scripts/functions/fct_init_metadata.R")
 
-
 # 2.0 Set up -------------------------------------------------------------------
 
 ## File path variables ----
@@ -133,15 +132,19 @@ df <- init_metadata()
 # 5.0 Populate metadata --------------------------------------------------------
 ## Loop over each tiff file:
 for (i in seq_along(file_list)) {
-
+  
   ### Read-in raster
   wtw_raster <- rast(file_list[i])
-  ## df
-  wtw_raster_df <- terra::as.data.frame(wtw_raster, na.rm=TRUE)
-  ## number of unique value
-  u_values <- nrow(unique(wtw_raster_df)) %>% as.numeric()
-  ## max raster value
-  max_value <- max(unique(wtw_raster_df)) %>% as.numeric()
+  
+  ### Get raster stats
+  if (!is.factor(wtw_raster)) {
+    ## df
+    wtw_raster_df <- terra::as.data.frame(wtw_raster, na.rm=TRUE)
+    ## number of unique value
+    u_values <- nrow(unique(wtw_raster_df)) %>% as.numeric()
+    ## max raster value
+    max_value <- max(wtw_raster_df) %>% as.numeric() # <- CAN NOT GET MAX ON CATEGORICAL DATA
+  }
   
   ## FILE ----------------------------------------------------------------------
   file_no_ext <- paste0(tools::file_path_sans_ext(basename(file_list[i])))
@@ -178,123 +181,138 @@ for (i in seq_along(file_list)) {
   } else if (file %in% NSC_SPP_META$File) {
     # NSC_SPP
     wtw_meta <- NSC_SPP_META
-  } else {
+    # NON SPECIES DATA
+  } else  if (file %in% FEATURES_META$File) {
     wtw_meta <- FEATURES_META
-  }
-  
-  #### return a single row
-  wtw_meta_row <- wtw_meta %>% filter(File == file)
-  
-  #### get source
-  source <- wtw_meta_row$Source
-  
-  ## TYPE ----------------------------------------------------------------------
-  ## there is no "Type" column in species metadata
-  type <- wtw_meta_row %>% 
-    {if ("Type" %in% colnames(wtw_meta)) pull(., Type) else "theme"} 
-  
-  ## NAME ----------------------------------------------------------------------
-  ## there is no "Name" column in species metadata
-  name <- wtw_meta_row %>% 
-    pull(ifelse(("Name" %in% colnames(wtw_meta)), Name, Common_Name)) 
-  
-  ## THEME ---------------------------------------------------------------------
-  theme <- wtw_meta_row %>% pull(Theme)
-    
-  ## LEGEND --------------------------------------------------------------------
-  legend <- if (u_values > 2) "continuous" else "manual"
-  
-  ## VALUES --------------------------------------------------------------------
-  if (identical(u_values, 2) && identical(max_value, 1)) {
-    values <- "0, 1" # IUCN, NSC, KBA, Includes 
-  } else if (identical(u_values, 2)) {
-    values <- paste0("0,", max_value) # ECCC: rare case if only 2 unique values
-  } else if (identical(u_values, 1)) {
-    values <- max_value # covers entire AOI
   } else {
-    values <- "" # continuous data does not need values
+    # REGIONAL DATA
+    wtw_meta <- NULL
   }
-
-  ## COLOR ---------------------------------------------------------------------
-  ## there is no "Color" column in species metadata 
-  color <- case_when(
-    identical(source, "ECCC_CH") && identical(u_values, 2) ~  "#00000000, #FFA500",
-    identical(source, "ECCC_CH") && identical(u_values, 1) ~  "#FFA500", 
-    identical(source, "ECCC_CH") && identical(legend, "continuous")  ~  "Oranges",
-    identical(source, "ECCC_SAR") && identical(u_values, 2) ~  "#00000000, #fb9a99",
-    identical(source, "ECCC_SAR") && identical(u_values, 1) ~  "#fb9a99", 
-    identical(source, "ECCC_SAR") && identical(legend, "continuous") ~  "Reds",
-    identical(source, "IUCN_AMPH") && identical(u_values, 2) ~  "#00000000, #a6cee3",
-    identical(source, "IUCN_AMPH") && identical(u_values, 1) ~  "#a6cee3",
-    identical(source, "IUCN_BIRD") && identical(u_values, 2) ~  "#00000000, #ff7f00",
-    identical(source, "IUCN_BIRD") && identical(u_values, 1) ~  "#ff7f00",
-    identical(source, "IUCN_MAMM") && identical(u_values, 2) ~  "#00000000, #b15928",
-    identical(source, "IUCN_MAMM") && identical(u_values, 1) ~  "#b15928",
-    identical(source, "IUCN_REPT") && identical(u_values, 2) ~  "#00000000, #b2df8a",
-    identical(source, "IUCN_REPT") && identical(u_values, 1) ~  "#b2df8a",
-    identical(source, "NSC_END") && identical(u_values, 2) ~  "#00000000, #4575b4",
-    identical(source, "NSC_END") && identical(u_values, 1) ~  "#4575b4",
-    identical(source, "NSC_SAR") && identical(u_values, 2) ~  "#00000000, #d73027",
-    identical(source, "NSC_SAR") && identical(u_values, 1) ~  "#d73027",
-    identical(source, "NSC_SPP") && identical(u_values, 2) ~  "#00000000, #e6f598",
-    identical(source, "NSC_SPP") && identical(u_values, 1) ~  "#e6f598",
-    TRUE ~ {if ("Color" %in% colnames(wtw_meta)) pull(wtw_meta_row, Color) else "" }
-  )
   
-  ## LABELS --------------------------------------------------------------------
-  ## there is no "Label" column in species metadata
-  labels <- case_when(
-    identical(source, "ECCC_CH") && identical(u_values, 2) ~  "Non Habitat, Habitat",
-    identical(source, "ECCC_CH") && identical(u_values, 1) ~  "Habitat",
-    identical(source, "ECCC_CH") && identical(legend, "continuous") ~  "",
-    identical(source, "ECCC_SAR") && identical(u_values, 2) ~  "Non Range, Range",
-    identical(source, "ECCC_SAR") && identical(u_values, 1) ~  "Range",
-    identical(source, "ECCC_SAR") && identical(legend, "continuous") ~  "",
-    identical(substring(source, 1, 4), "IUCN") && identical(u_values, 2) ~  "Non Habitat, Habitat",
-    identical(substring(source, 1, 4), "IUCN") && identical(values, 1) ~  "Habitat",
-    identical(substring(source, 1, 3), "NSC") && identical(u_values, 2) ~  "Non Occurrence, Occurrence",
-    identical(substring(source, 1, 3), "NSC") && identical(values, 1) ~  "Occurrence",
-    TRUE ~ {if ("Labels" %in% colnames(wtw_meta)) pull(wtw_meta_row, Labels) else "" }
-  )
+  # Process National ----
+  if (!is.null(wtw_meta)) {
   
-  ## UNITS ---------------------------------------------------------------------
-  ## there is no "Unit" column in species metadata
-  unit <- case_when(
-    (identical(source, "ECCC_CH")) ~ "ha",
-    (identical(source, "ECCC_SAR")) ~  "ha",
-    identical(source, "IUCN_AMPH") ~  "km2",
-    identical(source, "IUCN_BIRD") ~  "km2",
-    identical(source, "IUCN_MAMM") ~  "km2",
-    identical(source, "IUCN_REPT") ~  "km2",
-    identical(source, "NSC_END") ~  "km2",
-    identical(source, "NSC_SAR") ~  "km2",
-    identical(source, "NSC_SPP") ~  "km2",
-    TRUE ~ {if ("Unit" %in% colnames(wtw_meta)) pull(wtw_meta_row, Unit) else "" }
-  )   
+    #### return a single row
+    wtw_meta_row <- wtw_meta %>% filter(File == file)
+    
+    #### get source
+    source <- wtw_meta_row$Source
+    
+    ## TYPE ----------------------------------------------------------------------
+    ## there is no "Type" column in species metadata
+    type <- wtw_meta_row %>% 
+      {if ("Type" %in% colnames(wtw_meta)) pull(., Type) else "theme"} 
+    
+    ## NAME ----------------------------------------------------------------------
+    ## there is no "Name" column in species metadata
+    name <- wtw_meta_row %>% 
+      pull(ifelse(("Name" %in% colnames(wtw_meta)), Name, Common_Name)) 
+    
+    ## THEME ---------------------------------------------------------------------
+    theme <- wtw_meta_row %>% pull(Theme)
+      
+    ## LEGEND --------------------------------------------------------------------
+    legend <- if (u_values > 2) "continuous" else "manual"
+    
+    ## VALUES --------------------------------------------------------------------
+    if (identical(u_values, 2) && identical(max_value, 1)) {
+      values <- "0, 1" # IUCN, NSC, KBA, Includes 
+    } else if (identical(u_values, 2)) {
+      values <- paste0("0,", max_value) # ECCC: rare case if only 2 unique values
+    } else if (identical(u_values, 1)) {
+      values <- max_value # covers entire AOI
+    } else {
+      values <- "" # continuous data does not need values
+    }
   
-  ## PROVENANCE ----------------------------------------------------------------
-  provenance <- "national"
+    ## COLOR ---------------------------------------------------------------------
+    ## there is no "Color" column in species metadata 
+    color <- case_when(
+      identical(source, "ECCC_CH") && identical(u_values, 2) ~  "#00000000, #FFA500",
+      identical(source, "ECCC_CH") && identical(u_values, 1) ~  "#FFA500", 
+      identical(source, "ECCC_CH") && identical(legend, "continuous")  ~  "Oranges",
+      identical(source, "ECCC_SAR") && identical(u_values, 2) ~  "#00000000, #fb9a99",
+      identical(source, "ECCC_SAR") && identical(u_values, 1) ~  "#fb9a99", 
+      identical(source, "ECCC_SAR") && identical(legend, "continuous") ~  "Reds",
+      identical(source, "IUCN_AMPH") && identical(u_values, 2) ~  "#00000000, #a6cee3",
+      identical(source, "IUCN_AMPH") && identical(u_values, 1) ~  "#a6cee3",
+      identical(source, "IUCN_BIRD") && identical(u_values, 2) ~  "#00000000, #ff7f00",
+      identical(source, "IUCN_BIRD") && identical(u_values, 1) ~  "#ff7f00",
+      identical(source, "IUCN_MAMM") && identical(u_values, 2) ~  "#00000000, #b15928",
+      identical(source, "IUCN_MAMM") && identical(u_values, 1) ~  "#b15928",
+      identical(source, "IUCN_REPT") && identical(u_values, 2) ~  "#00000000, #b2df8a",
+      identical(source, "IUCN_REPT") && identical(u_values, 1) ~  "#b2df8a",
+      identical(source, "NSC_END") && identical(u_values, 2) ~  "#00000000, #4575b4",
+      identical(source, "NSC_END") && identical(u_values, 1) ~  "#4575b4",
+      identical(source, "NSC_SAR") && identical(u_values, 2) ~  "#00000000, #d73027",
+      identical(source, "NSC_SAR") && identical(u_values, 1) ~  "#d73027",
+      identical(source, "NSC_SPP") && identical(u_values, 2) ~  "#00000000, #e6f598",
+      identical(source, "NSC_SPP") && identical(u_values, 1) ~  "#e6f598",
+      TRUE ~ {if ("Color" %in% colnames(wtw_meta)) pull(wtw_meta_row, Color) else "" }
+    )
+    
+    ## LABELS --------------------------------------------------------------------
+    ## there is no "Label" column in species metadata
+    labels <- case_when(
+      identical(source, "ECCC_CH") && identical(u_values, 2) ~  "Non Habitat, Habitat",
+      identical(source, "ECCC_CH") && identical(u_values, 1) ~  "Habitat",
+      identical(source, "ECCC_CH") && identical(legend, "continuous") ~  "",
+      identical(source, "ECCC_SAR") && identical(u_values, 2) ~  "Non Range, Range",
+      identical(source, "ECCC_SAR") && identical(u_values, 1) ~  "Range",
+      identical(source, "ECCC_SAR") && identical(legend, "continuous") ~  "",
+      identical(substring(source, 1, 4), "IUCN") && identical(u_values, 2) ~  "Non Habitat, Habitat",
+      identical(substring(source, 1, 4), "IUCN") && identical(values, 1) ~  "Habitat",
+      identical(substring(source, 1, 3), "NSC") && identical(u_values, 2) ~  "Non Occurrence, Occurrence",
+      identical(substring(source, 1, 3), "NSC") && identical(values, 1) ~  "Occurrence",
+      TRUE ~ {if ("Labels" %in% colnames(wtw_meta)) pull(wtw_meta_row, Labels) else "" }
+    )
+    
+    ## UNITS ---------------------------------------------------------------------
+    ## there is no "Unit" column in species metadata
+    unit <- case_when(
+      (identical(source, "ECCC_CH")) ~ "ha",
+      (identical(source, "ECCC_SAR")) ~  "ha",
+      identical(source, "IUCN_AMPH") ~  "km2",
+      identical(source, "IUCN_BIRD") ~  "km2",
+      identical(source, "IUCN_MAMM") ~  "km2",
+      identical(source, "IUCN_REPT") ~  "km2",
+      identical(source, "NSC_END") ~  "km2",
+      identical(source, "NSC_SAR") ~  "km2",
+      identical(source, "NSC_SPP") ~  "km2",
+      TRUE ~ {if ("Unit" %in% colnames(wtw_meta)) pull(wtw_meta_row, Unit) else "" }
+    )   
+    
+    ## PROVENANCE ----------------------------------------------------------------
+    provenance <- "national"
+    
+    ## ORDER ---------------------------------------------------------------------
+    order <- "" # manual assignment in csv
+    
+    ## VISIBLE -------------------------------------------------------------------
+    visible <- if (startsWith(file_no_ext, "I_NAT")) "TRUE" else "FALSE" 
+    
+    ## HIDDEN --------------------------------------------------------------------
+    hidden <- "FALSE" 
+    
+    ## GOAL ----------------------------------------------------------------------
+    goal <- if (identical(type, "theme")) "0.2" else "" # <--- UPDATING SOON
+    
+    ## Build new national row ----
+    new_row <- c(type, theme, file, name, legend, 
+                 values, color, labels, unit, provenance, 
+                 order, visible, hidden, goal)
+    
+  } else {
+    
+    ## Build new regional row ----
+    new_row <- c("", "", file, "", "", 
+                 "", "", "", "", "regional", 
+                 "", "", "", "0.2")
+  }
   
-  ## ORDER ---------------------------------------------------------------------
-  order <- "" # manual assignment in csv
-  
-  ## VISIBLE -------------------------------------------------------------------
-  visible <- if (startsWith(file_no_ext, "I_NAT")) "TRUE" else "FALSE" 
-  
-  ## HIDDEN --------------------------------------------------------------------
-  hidden <- "FALSE" 
-  
-  ## GOAL ----------------------------------------------------------------------
-  goal <- if (identical(type, "theme")) "0.2" else "" # <--- UPDATING SOON
-  
-  ## Build new row ----
-  new_row <- c(
-    type, theme, file, name, legend, 
-    values, color, labels, unit, provenance, 
-    order, visible, hidden, goal
-  )
   ## Append to DF
   df <- structure(rbind(df, new_row), .Names = names(df))
+  
 } 
 
 # Write to csv ----
