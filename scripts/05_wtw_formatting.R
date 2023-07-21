@@ -35,9 +35,9 @@ library(wheretowork)
 
 
 # 2.0 Set up -------------------------------------------------------------------
-
+setwd("C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2")
 ## Set path where a QC'd metadata.csv version is located
-metadata_path <- "WTW/metadata/sw-on-metadata.csv" # <--- CHANGE PATH HERE FOR NEW PROJECT
+metadata_path <- "WTW/metadata/sw-on-v2-metadata.csv" # <--- CHANGE PATH HERE FOR NEW PROJECT
 
 ## Set path where rasters are located
 tiffs_path <- "Tiffs" # <--- CHANGE PATH HERE FOR NEW PROJECT
