@@ -26,6 +26,7 @@ library(readr)
 library(readxl)
 # source("scripts/functions/fct_sci_to_common.R") # <--- NOT NEEDED, KEEP FOR NOW
 source("scripts/functions/fct_init_metadata.R")
+# source("scripts/functions/fct_calc_goals.R") # <--- COME BACK TO THIS
 
 # 2.0 Set up -------------------------------------------------------------------
 
@@ -118,6 +119,8 @@ NSC_SAR_META <- read_excel(file.path(table_path,  "WTW_NAT_SPECIES_METADATA.xlsx
 NSC_SPP_META <- read_excel(file.path(table_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 9)
 ### other national themes, weights and includes
 FEATURES_META <- read_excel(file.path(table_path,  "WTW_NAT_FEATURES_METADATA.xlsx"))
+### Existing conservation
+PA <- rast(file.path(tiff_folder, "I_NAT_Protected.tif"))
 
 ## Read-in tiff file paths ----
 file_list <- list.files(tiff_folder, pattern='.tif$', full.names = T, recursive = T) 
@@ -134,7 +137,7 @@ df <- init_metadata()
 for (i in seq_along(file_list)) {
   
   ### Read-in raster
-  wtw_raster <- rast(file_list[i])
+  wtw_raster <- rast(file_list[30])
   
   ### Get raster stats
   if (!is.factor(wtw_raster)) {
@@ -147,11 +150,14 @@ for (i in seq_along(file_list)) {
   }
   
   ## FILE ----------------------------------------------------------------------
-  file_no_ext <- paste0(tools::file_path_sans_ext(basename(file_list[i])))
+  file_no_ext <- paste0(tools::file_path_sans_ext(basename(file_list[30])))
   file <-  paste0(file_no_ext, ".tif")
   
   #### message
   print(paste0(file, " (", i, "/", length(file_list), ")"))
+  
+  #### set species goal flag
+  species_goal <- TRUE
   
   #### get metadata associated with file name
   if (file %in% ECCC_CH_META$File) {
@@ -184,9 +190,11 @@ for (i in seq_along(file_list)) {
     # NON SPECIES DATA
   } else  if (file %in% FEATURES_META$File) {
     wtw_meta <- FEATURES_META
+    species_goal <- FALSE # default goals
   } else {
     # REGIONAL DATA
     wtw_meta <- NULL
+    species_goal <- FALSE # default goals
   }
   
   # Process National ----
@@ -295,7 +303,62 @@ for (i in seq_along(file_list)) {
     hidden <- "FALSE" 
     
     ## GOAL ----------------------------------------------------------------------
-    goal <- if (identical(type, "theme")) "0.2" else "" # <--- UPDATING SOON
+    if (species_goal) {
+      
+      # EXAMPLE: 
+      # ECCC SAR RANGE MAP EXNTENT
+      # Eastern Foxsnake (Great Lakes / St. Lawrence population)
+
+      ## area of species within Canada: 1797.28 km2
+      CAN_AOH <- wtw_meta_row$Total_Km2                            
+      
+      ## area of of species protected within Canada: 461.6521 km2
+      CAN_PA <- wtw_meta_row$Protected_Km2                      
+      
+      ## area of species within AOI: 20.78km2
+      AOI_AOH <- sum(wtw_raster_df)
+      AOI_AOH <- ifelse(identical(unit, "ha"), AOI_AOH / 100, AOI_AOH) 
+      
+      ## area of species protected within AOI: 0 km2
+      if(identical(unit, "ha")) {
+        AOI_PA <- global(terra::mask(wtw_raster, PA, inverse = TRUE) / 100, "sum", na.rm=TRUE)$sum
+      } else {
+        AOI_PA <- global(terra::mask(wtw_raster, PA, inverse = TRUE), "sum", na.rm=TRUE)$sum
+      }
+      
+      ## no protection in AOI
+      if (is.na(AOI_PA)) {
+        AOI_PA <- 0
+      }
+      
+      ## define gap, 30% Canadian target as baseline: 77.53184 km2
+      GAP <- (CAN_AOH * 0.3) - CAN_PA
+      
+      ## available unprotected area in AOI: 20.78 km2
+      AOI_AVAILABLE <- AOI_AOH - AOI_PA
+      
+      ## available unprotected area in Canada: 1335.628 km2
+      CAN_AVAILABLE <- CAN_AOH - CAN_PA
+      
+      ## proportion of available unprotected area in AOI: 0.01555823
+      PRP_AOI_AVAILBLE <- AOI_AVAILABLE / CAN_AVAILABLE 
+      
+      ## AOI area contribution: 1.206258
+      CONTRIBUTION <- GAP *  PRP_AOI_AVAILBLE
+      
+      ## final goal: 0.05804899
+      goal <- (AOI_PA + CONTRIBUTION) / AOI_AOH
+      
+      ## I_NAT uses a 50% cut-off. Layers will have a slight discrepancy
+      if (goal < 0) {
+        goal <- 0
+      }
+      
+    } else if (isFALSE(species_goal) && identical(type, "theme")) {
+      goal <- "0.2"
+    } else {
+      goal <- ""
+    }
     
     ## Build new national row ----
     new_row <- c(type, theme, file, name, legend, 
