@@ -26,6 +26,7 @@ library(readr)
 library(readxl)
 # source("scripts/functions/fct_sci_to_common.R") # <--- NOT NEEDED, KEEP FOR NOW
 source("scripts/functions/fct_init_metadata.R")
+source("scripts/functions/fct_calculate_targets.R")
 
 # 2.0 Set up -------------------------------------------------------------------
 
@@ -295,7 +296,20 @@ for (i in seq_along(file_list)) {
     hidden <- "FALSE" 
     
     ## GOAL ----------------------------------------------------------------------
-    goal <- if (identical(type, "theme")) "0.2" else "" # <--- UPDATING SOON
+    if (identical(type, "theme")) {
+      if (identical(source, "ECCC_CH") | identical(source, "ECCC_SAR")) {
+        ### get cell sum in km2
+        sum_km2 <- (terra::global(wtw_raster, "sum", na.rm=TRUE)$sum) / 100
+      } else{
+        sum_km2 <- terra::global(wtw_raster, "sum", na.rm=TRUE)$sum
+      }
+      
+      # calculate goal using Rodrigues method
+      goal <- calculate_targets(sum_km2)
+      
+    } else {
+      goal <- ""
+    }  
     
     ## Build new national row ----
     new_row <- c(type, theme, file, name, legend, 
