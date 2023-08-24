@@ -137,7 +137,7 @@ df <- init_metadata()
 for (i in seq_along(file_list)) {
   
   ### Read-in raster
-  wtw_raster <- rast(file_list[30])
+  wtw_raster <- rast(file_list[i])
   
   ### Get raster stats
   if (!is.factor(wtw_raster)) {
@@ -150,7 +150,7 @@ for (i in seq_along(file_list)) {
   }
   
   ## FILE ----------------------------------------------------------------------
-  file_no_ext <- paste0(tools::file_path_sans_ext(basename(file_list[30])))
+  file_no_ext <- paste0(tools::file_path_sans_ext(basename(file_list[i])))
   file <-  paste0(file_no_ext, ".tif")
   
   #### message
