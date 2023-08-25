@@ -296,21 +296,23 @@ for (i in seq_along(file_list)) {
     hidden <- "FALSE" 
     
     ## GOAL ----------------------------------------------------------------------
+    ## only set goals for themes
     if (identical(type, "theme")) {
-      if (identical(source, "ECCC_CH") | identical(source, "ECCC_SAR")) {
-        ### get cell sum in km2
-        sum_km2 <- (terra::global(wtw_raster, "sum", na.rm=TRUE)$sum) / 100
-      } else{
-        sum_km2 <- terra::global(wtw_raster, "sum", na.rm=TRUE)$sum
+      ## only set Rodrigues goals on species data
+      species_sources <- c(
+        "ECCC_CH", "ECCC_SAR", 
+        "IUCN_AMPH", "IUCN_BIRD", "IUCN_MAMM", "IUCN_REPT",
+        "NSC_END", "NSC_SAR", "NSC_SPP"
+      )
+      if (source %in% species_sources) {
+        goal <- wtw_meta_row$Goal # species
+      } else {
+        goal <- "0.2" # forest, wetland, rivers, lakes, shoreline
       }
-      
-      # calculate goal using Rodrigues method
-      goal <- calculate_targets(sum_km2)
-      
     } else {
-      goal <- ""
-    }  
-    
+      goal <- "" # weights, includes, excludes
+    }    
+
     ## Build new national row ----
     new_row <- c(type, theme, file, name, legend, 
                  values, color, labels, unit, provenance, 
