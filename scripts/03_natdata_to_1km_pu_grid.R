@@ -30,7 +30,7 @@ terra::gdalCache(size = 8000) # set cache to 8gb
 # 2.0 Set up -------------------------------------------------------------------
 
 ## Set output folder and PU ----
-input_data_path <- "C:/Data/PRZ/WTW_DATA/WTW_NAT_DATA_20230718" # <--- SET PATH TO PREPPED NATIONAL DATA FOLDER
+input_data_path <- "C:/Data/PRZ/WTW_DATA/WTW_NAT_DATA_20230825" # <--- SET PATH TO PREPPED NATIONAL DATA FOLDER
 
 pu_path <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2/PU/PU.tif" # <--- SET PATH TO PU.tif
 
