@@ -26,7 +26,7 @@ library(readr)
 library(readxl)
 # source("scripts/functions/fct_sci_to_common.R") # <--- NOT NEEDED, KEEP FOR NOW
 source("scripts/functions/fct_init_metadata.R")
-source("scripts/functions/fct_calculate_targets.R")
+source("scripts/functions/fct_calculate_targets.R") # <--- NOT NEEDED, KEEP FOR NOW
 
 # 2.0 Set up -------------------------------------------------------------------
 
