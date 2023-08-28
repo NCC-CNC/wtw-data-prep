@@ -1,7 +1,7 @@
 #
 # Author: Dan Wismer & Marc Edwards
 #
-# Date: July 27th, 2023
+# Date: Aug 28th, 2023
 #
 # Description: Copies prepped National rasters to the Tiffs folder.
 #              Generates a metadata.csv for all national layers. This csv is 
