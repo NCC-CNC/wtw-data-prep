@@ -1,7 +1,7 @@
 #
 # Author: Dan Wismer & Marc Edwards
 #
-# Date: July 27th, 2023
+# Date: Aug 28th, 2023
 #
 # Description: Copies prepped National rasters to the Tiffs folder.
 #              Generates a metadata.csv for all national layers. This csv is 
@@ -26,6 +26,7 @@ library(readr)
 library(readxl)
 # source("scripts/functions/fct_sci_to_common.R") # <--- NOT NEEDED, KEEP FOR NOW
 source("scripts/functions/fct_init_metadata.R")
+# source("scripts/functions/fct_calculate_targets.R") # <--- NOT NEEDED, KEEP FOR NOW
 
 # 2.0 Set up -------------------------------------------------------------------
 
@@ -295,8 +296,23 @@ for (i in seq_along(file_list)) {
     hidden <- "FALSE" 
     
     ## GOAL ----------------------------------------------------------------------
-    goal <- if (identical(type, "theme")) "0.2" else "" # <--- UPDATING SOON
-    
+    ## only set goals for themes
+    if (identical(type, "theme")) {
+      ## only set Rodrigues goals on species data
+      species_sources <- c(
+        "ECCC_CH", "ECCC_SAR", 
+        "IUCN_AMPH", "IUCN_BIRD", "IUCN_MAMM", "IUCN_REPT",
+        "NSC_END", "NSC_SAR", "NSC_SPP"
+      )
+      if (source %in% species_sources) {
+        goal <- wtw_meta_row$Goal # species
+      } else {
+        goal <- "0.2" # forest, wetland, rivers, lakes, shoreline
+      }
+    } else {
+      goal <- "" # weights, includes, excludes
+    }    
+
     ## Build new national row ----
     new_row <- c(type, theme, file, name, legend, 
                  values, color, labels, unit, provenance, 
