@@ -46,10 +46,11 @@ tiffs_path <- "Tiffs" # <--- CHANGE PATH HERE FOR NEW PROJECT
 study_area_file <- "PU/PU.tif" # <--- CHANGE PATH HERE FOR NEW PROJECT
 
 ## Set output variables for WTW file names
-prj_name <- "SW Ontario" # <----- spaces allowed
-prj_file_name <-"sw_on" # <----- no spaces allowed
+prj_name <- "SW Ontario v2" # <----- spaces allowed
+prj_file_name <-"sw_on_v2" # <----- no spaces allowed
 author_name <- "Dan Wismer" # <----- your name
 author_email <- "dan.wismer@natureconservancy.ca" # <----- your email
+user_groups <- "private" # <---- options: public or private.  
 
 
 # 3.0 Import meta data and PUs -------------------------------------------------
@@ -361,6 +362,7 @@ write_project(
   attribute_path = paste0("WTW/", prj_file_name, "_attribute.csv.gz"), 
   boundary_path = paste0("WTW/", prj_file_name, "_boundary.csv.gz"),
   mode = "advanced",
+  user_groups = user_groups,
   author_name = author_name, 
   author_email = author_email 
 )
