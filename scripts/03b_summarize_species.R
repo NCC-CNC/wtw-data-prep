@@ -119,7 +119,6 @@ for (i in seq_along(tif_lst)) {
     # NON SPECIES DATA
   } else  if (file %in% FEATURES_META$File) {
     wtw_meta <- FEATURES_META
-    
   } else {
     # REGIONAL DATA or NON SPECIES DATA
     wtw_meta <- NULL
