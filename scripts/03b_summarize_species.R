@@ -1,142 +1,200 @@
 # Authors: Dan Wismer & Marc Edwards
 #
-# Date: April 13th, 2023
+# Date: Sept 18th, 2023
 #
-# Description: Summarizes national species data that intersect your aoi. To be
-#              ran after 03_natdata_to_1km_pu_grid.R
+# Description: Summarizes national data in tiff folder
 #
-# Inputs:  1. root folder (where your "clipped" national layers are located)
+# Inputs:  1. root folders 
 #          2. path for species .csv 
 #
-# Outputs: 1. a csv that lists the species that intersect the aoi 
+# Outputs: 1. a csv that lists metadata on each feature such as total area and 
+#             % protected inside and outside of AOI
 #
 #===============================================================================
 # Start timer
 start_time <- Sys.time()
 
-# 1.0 Load packages ------------------------------------------------------------
-
+# Load packages ---- 
 library(dplyr)
 library(readr)
 library(readxl)
 library(stringr)
-source("scripts/functions/fct_sci_to_common.R") # <--- CHANGE IF NOT RUNNING SCRIPT FROM GITHUB FOLDER
+library(terra)
 
+## Set folder paths ----
+prj_folder <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2" # <--- CHANGE FOR NEW WTW PROJECT
+nat_folder <- file.path(prj_folder, "National")
+tif_folder <- file.path(prj_folder, "Tiffs")
+tbl_folder <- file.path(nat_folder, "_Tables")
 
-# 2.0 Set up -------------------------------------------------------------------
+## Set output csv ----
+output_csv <- file.path(prj_folder, "Tiffs/METADATA.csv")
 
-# INPUT 1: Set root folder ----
-project_folder <- "data/output"
+# Read-in metadata xlsx's ----
+## species
+ECCC_CH_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 1)
+ECCC_SAR_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 2)
+IUCN_AMPH_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 3)
+IUCN_BIRD_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 4)
+IUCN_MAMM_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 5)
+IUCN_REPT_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 6)
+NSC_END_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 7)
+NSC_SAR_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 8)
+NSC_SPP_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 9)
+## other national themes, weights and includes
+FEATURES_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_FEATURES_METADATA.xlsx"))
 
-# INPUT 2: Set csv path ----
-output_csv <- "/National/Themes/SPECIES.csv" 
-
-
-# 3.0 Processing ---------------------------------------------------------------
-
-# Read-in look up tables ----
-table_path <- file.path(project_folder, "National", "_Tables")
-ECCC_SAR_LU <- read_csv(file.path(table_path, "ECCC_SAR_Metadata.csv"))
-ECCC_CH_LU <- read_excel(file.path(table_path,  "ECCC_CH_Metadata.xlsx"))
-IUCN_LU <- read_csv(file.path(table_path, "IUCN_Metadata.csv"))
-NSC_END_LU <- read_excel(file.path(table_path,  "NSC_END_Metadata.xlsx"))
-NSC_SAR_LU <- read_excel(file.path(table_path, "NSC_SAR_Metadata.xlsx"))
-NSC_SPP_LU <- read_excel(file.path(table_path, "NSC_SPP_Metadata.xlsx"))
-
-# List files in root folder
-tiffs <- list.files(
-  project_folder, pattern='.tif$', full.names = TRUE, recursive = TRUE
+# List files in Tiffs folder ----
+tif_lst <- list.files(
+  tif_folder, pattern='.tif$', full.names = TRUE, recursive = FALSE
 )
 
-# Build empty data.frame (template for metadata.csv)
+# List includes ----
+include_lst <- list.files(
+  tif_folder, pattern='^I.*\\.tif$', full.names = TRUE, recursive = FALSE
+)
+
+# Mosaic includes into one raster ----
+includes <- terra::mosaic(sprc(rast(include_lst)), fun = "max")
+
+# Build empty df ----
 df <- data.frame(
-  Source = character(),
-  File = character(),
-  Sci = character(),
-  Common = character(),
-  Area_Km2 = numeric()
+  Source = character(), # source
+  Type = character(),   # theme, weight, include or exclude
+  File = character(),   # file name
+  Provenance = character(), # national or regional
+  Theme = character(), # layer theme
+  Sci_Name = character(), # scientific name
+  Common_Name = character(), # common name
+  CA_Total_Km2 = numeric(), # total range / AOH area in Canada
+  CA_Protected_Km2 = numeric(), # total range / AOH protected in Canada
+  CA_Pct_Protected = numeric(), # % total range / AOH protected protected in Canada
+  Goal = numeric(), # species goal
+  WTW_Total_Km2 = numeric(), # total range / AOH area in WTW project
+  WTW_Protected_Km2 = numeric(), # total range / AOH protected in WTW project
+  WTW_Pct_Protected = numeric() # % total range / AOH protected protected in WTW project
 )
 
-# Vector of prefixes
-prefixes <- c(
-  "T_ECCC_CH_", "T_ECCC_SAR_", 
-  "T_IUCN_AMPH_", "T_IUCN_BIRD_", "T_IUCN_MAMM_", "T_IUCN_REPT_",
-  "T_NSC_END_", "T_NSC_SAR_", "T_NSC_SPP_"
-)
-
-# Vector of sources
-sources <- c(
-  "ECCC CH", "ECCC SAR", 
-  "IUCN AMPH", "IUCN BIRD", "IUCN MAMM", "IUCN REPT",
-  "NSC END", "NSC SAR", "NSC SPP"
-)
-
-# Populate df ----
-for (tiff in tiffs) {
+# Populate species df ----
+for (i in seq_along(tif_lst)) {
   
-  ## Get file name ----
-  file <- tools::file_path_sans_ext(basename(tiff))
+  ## read-in raster
+  wtw_raster <- rast(tif_lst[i])
   
-  ## Only sort through species Themes
-  if (any(startsWith(file, prefixes))) {
-    
-    ### Get prefix 
-    prefix <- prefixes[startsWith(file, prefixes)]
-    ### split to get suffix
-    suffix <- unlist(str_split(file, prefix))[2] 
-    
-    ### Get common name ----
-    #### ECCC_CH
-    if (prefix %in% c("T_ECCC_CH_")) {
-      cosewicid <- unlist(str_split(file, "T_ECCC_CH_COSEWICID_"))[2] 
-      com_name <- ch_cosewicid_to_name(ECCC_CH_LU, cosewicid, "common")
-      #### ECCC_SAR
-    } else if (prefix %in% c("T_ECCC_SAR_")) {
-      cosewicid <- unlist(str_split(file, "T_ECCC_SAR_COSEWICID_"))[2] 
-      com_name <- sar_cosewicid_to_name(ECCC_SAR_LU, cosewicid, "common")
-      #### IUCN
-    } else if (prefix %in% c("T_IUCN_AMPH_", "T_IUCN_BIRD_", "T_IUCN_MAMM_", "T_IUCN_REPT_")) {
-      com_name <- iucn_to_name(IUCN_LU, paste0(suffix, ".tif"))
-      #### NSC_END
-    } else if (prefix %in% c("T_NSC_END_")) {
-      suffix_no_ <- gsub("_", " ", suffix) 
-      com_name <- nsc_end_to_name(NSC_END_LU, suffix_no_)
-      #### NSC_SAR
-    } else if (prefix %in% c("T_NSC_SAR_")) {
-      suffix_no_ <- gsub("_", " ", suffix) 
-      com_name <- nsc_sar_to_name(NSC_SAR_LU, suffix_no_)
-      #### NSC_SPP
-    } else if (prefix %in% c("T_NSC_SPP_")) {
-      suffix_no_ <- gsub("_", " ", suffix) 
-      com_name <- nsc_spp_to_name(NSC_SPP_LU, suffix_no_)
-    }
-    
-    ### Get source ----
-    source <- sources[startsWith(file, prefixes)]
-    
-    ### get sci name ----
-    if (prefix %in% c("T_ECCC_CH_")) {
-      sci_name <- ch_cosewicid_to_name(ECCC_CH_LU, cosewicid, "sci")
-    } else if (prefix %in% c("T_ECCC_SAR_")) {
-      sci_name <- sar_cosewicid_to_name(ECCC_SAR_LU, cosewicid, "sci")
-    } else {
-      sci_name <- gsub("_", " ", suffix) 
-    }
-    
-    ### Get area ----
-    species <- raster::raster(tiff)
-    area <- raster::cellStats(species, stat = "sum")
-    
-    ## Append row to data.frame ----
-    new_row <- c(source, paste0(file, ".tif"), sci_name, com_name, area)
-    df <- structure(rbind(df, new_row), .Names = names(df)) 
+  ## file
+  file_no_ext <- paste0(tools::file_path_sans_ext(basename(tif_lst[i])))
+  file <-  paste0(file_no_ext, ".tif")
+  
+  ## message
+  print(paste0(file, " (", i, "/", length(tif_lst), ")"))
+  
+  ## get metadata associated with file name
+  if (file %in% ECCC_CH_META$File) {
+    # ECCC_CH
+    wtw_meta <- ECCC_CH_META
+  } else if (file %in% ECCC_SAR_META$File) {
+    # ECCC_SAR
+    wtw_meta <- ECCC_SAR_META
+  } else if (file %in% IUCN_AMPH_META$File) {
+    # IUCN_AMPH
+    wtw_meta <- IUCN_AMPH_META
+  } else if (file %in% IUCN_BIRD_META$File) {
+    # IUCN_BIRD
+    wtw_meta <- IUCN_BIRD_META
+  } else if (file %in% IUCN_MAMM_META$File) {
+    # IUCN_MAMM
+    wtw_meta <- IUCN_MAMM_META
+  } else if (file %in% IUCN_REPT_META$File) {
+    # IUCN_REPT
+    wtw_meta <- IUCN_REPT_META
+  } else if (file %in% NSC_END_META$File) {
+    # NSC_END
+    wtw_meta <- NSC_END_META
+  } else if (file %in% NSC_SAR_META$File) {
+    # NSC_SAR
+    wtw_meta <- NSC_SAR_META
+  } else if (file %in% NSC_SPP_META$File) {
+    # NSC_SPP
+    wtw_meta <- NSC_SPP_META
+    # NON SPECIES DATA
+  } else  if (file %in% FEATURES_META$File) {
+    wtw_meta <- FEATURES_META
+  } else {
+    # REGIONAL DATA or NON SPECIES DATA
+    wtw_meta <- NULL
   }
-}
+  
+  ## process National species ----
+  if (!is.null(wtw_meta)) {
+   
+    ### return a single row
+    wtw_meta_row <- wtw_meta %>% filter(File == file)
+    
+    ### get source
+    source <- wtw_meta_row$Source
+    ### get type
+    type <- suppressWarnings(ifelse(is.null(wtw_meta_row$Type), "theme", wtw_meta_row$Type))
+    ### get provenance
+    prv <- "national"
+    ### get theme
+    theme <- wtw_meta_row$Theme   
+    ### get file
+    file <- wtw_meta_row$File
+    ### get sci name
+    sci <- suppressWarnings(ifelse(is.null(wtw_meta_row$Sci_Name), "", wtw_meta_row$Sci_Name))
+    ### get common name
+    com <- suppressWarnings(ifelse(is.null(wtw_meta_row$Common_Name), "", wtw_meta_row$Common_Name))
+    ### get total range / AOH area in Canada
+    ca_km2 <- suppressWarnings(ifelse(is.null(wtw_meta_row$Total_Km2), "", wtw_meta_row$Total_Km2))
+    ### get range / AOH protected in Canada
+    ca_i <- suppressWarnings(ifelse(is.null(wtw_meta_row$Protected_Km2), "", wtw_meta_row$Protected_Km2))
+    ### get range / AOH % protected in Canada
+    ca_pct_i <- suppressWarnings(ifelse(is.null(wtw_meta_row$Pct_Protected), "", wtw_meta_row$Pct_Protected))
+    ### get goal
+    goal <- suppressWarnings(ifelse(is.null(wtw_meta_row$Goal), "", wtw_meta_row$Goal))
+  }
+  
+  ## get range / AOH area in WTW project
+  prj_km2 <- terra::global(wtw_raster, fun="sum", na.rm=TRUE)[[1]]
+  if (source %in% c("ECCC_CH", "ECCC_SAR")) {
+    prj_km2 <- prj_km2 / 100 
+  } 
+  
+  ## get range / AOH area project WTW project
+  prj_i <- terra::global(wtw_raster * includes, fun="sum", na.rm=TRUE)[[1]]
+  if (source %in% c("ECCC_CH", "ECCC_SAR")) {
+    prj_i <- prj_i / 100 
+  } 
+  
+  ## get range / AOH % project WTW project
+  prj_pct_i <-  round(((prj_i / prj_km2) * 100),2)
+  
+  # Build row ----
+  if (!is.null(wtw_meta)) {
+    ## national row 
+    new_row <- c(
+      source, type, file, prv, theme, sci, com, 
+      ca_km2, ca_i, ca_pct_i, goal,
+      prj_km2, prj_i, prj_pct_i
+    )
+  } else {
+    ## regional row 
+    new_row <- c(
+      "", "", file, "regional", "", "", "", 
+      "", "", "", "", "0.2", 
+      prj_km2, prj_i, prj_pct_i
+    )  
+  }
+  
+  ## append to df ----
+  df <- structure(rbind(df, new_row), .Names = names(df))
+  
+} 
 
-# OUTPUT 1: write species data.frame to disk 
-write.csv(df, file.path(project_folder, output_csv), row.names = FALSE)
-
+# Write to csv ----
+write.csv(df, file.path(output_csv),row.names = FALSE)
 
 # End timer
 end_time <- Sys.time()
-end_time - start_time
+end_time - start_time  
+  
