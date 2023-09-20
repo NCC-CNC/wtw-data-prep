@@ -47,10 +47,10 @@ The objective of these scripts is to get the source data into a standardized set
 
 There are three main formats that Where to Work will accept for loading data:
 
-1. The four WTW input files desribed [below](#05_wtw_formatting.r), where the spatial input file is a raster and each planning unit is a cell in the raster grid.
+1. The four WTW input files desribed [below](#`05_wtw_formatting.r`), where the spatial input file is a raster and each planning unit is a cell in the raster grid.
 This is the preferred input format because it's the fastest to prepare and load into WTW.
 
-2. The four WTW input files desribed [below](#05_wtw_formatting.r), where the spatial input file is a shapefile and each planning unit is a polygon defined in the shapefile.
+2. The four WTW input files desribed [below](#`05_wtw_formatting.r`), where the spatial input file is a shapefile and each planning unit is a polygon defined in the shapefile.
 This is the preferred input format when non-grid planning units are required (i.e. the planning units cannot be represented in a raster grid).
 
 3. A single shapefile where each polygon represents a planning unit and each column in the attribute table represents a Theme, Includes, Excludes or Weight. This format is
