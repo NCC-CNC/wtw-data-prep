@@ -292,7 +292,7 @@ If Type is theme, provide a goal for the layer when `wheretowork` is initialized
 Available choices: a number between 0 and 1
 
 
-<h3 id="wtw-formatting">`05_wtw_formatting.R`</h3>
+<h3 id="wtw-formatting"><code>05_wtw_formatting.R</code></h3>
 
 _Creates the four files required by WTW._
 
