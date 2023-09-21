@@ -35,7 +35,7 @@ SHP <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2/PU/AOI.shp" # <- CHANGE TO YOUR S
 OUTPUT <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2/PU" # <- CHANGE TO YOUR OUTPUT FOLDER PATH
 
 # Read-in constant 1km raster grid
-CONSTANT_1KM_IDX_PATH <- "C:/Data/PRZ/WTW_DATA/WTW_NAT_DATA_20230718/_nccgrid/Constant_1KM_IDX.tif" # <- CHANGE TO YOUR GRID PATH
+CONSTANT_1KM_IDX_PATH <- "C:/Data/PRZ/WTW_DATA/WTW_NAT_DATA_20230921/nat_pu/Constant_1KM_IDX.tif" # <- CHANGE TO YOUR GRID PATH
 CONSTANT_1KM_IDX <- rast(CONSTANT_1KM_IDX_PATH ) 
 
 # 3.0 Processing ---------------------------------------------------------------
