@@ -10,7 +10,7 @@
 # Outputs: 1. a 1km x 1km raster layer for each variable that intersects 
 #             the pu's
 #
-# Tested on R Versions: 4.3.1 
+# Tested on R Versions: 4.3.0 and 4.3.1 
 #
 #===============================================================================
 # Start timer

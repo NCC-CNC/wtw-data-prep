@@ -16,6 +16,8 @@
 #          2. 1km raster grid (values are all 1)
 #          3. 1km raster grid (values are all 0)
 #
+# Tested on R Versions: 4.3.0
+#
 #===============================================================================
 # Start timer
 start_time <- Sys.time()

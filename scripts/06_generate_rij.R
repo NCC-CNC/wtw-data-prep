@@ -13,6 +13,8 @@
 # Outputs: 1. A set of .rds spare matrices describing the amount of each feature
 #             in each planning unit
 #
+# Tested on R Versions: 4.3.0
+#
 #===============================================================================
 ## Start timer
 start_time <- Sys.time()
