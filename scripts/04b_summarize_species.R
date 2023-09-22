@@ -10,6 +10,8 @@
 # Outputs: 1. a csv that lists metadata on each feature such as total area and 
 #             % protected inside and outside of AOI
 #
+# Tested on R Versions: 4.3.0
+#
 #===============================================================================
 # Start timer
 start_time <- Sys.time()
