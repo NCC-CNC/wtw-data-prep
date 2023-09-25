@@ -12,6 +12,8 @@
 #
 # Outputs: 1. A metadata.csv to QC (quality control)
 #
+# Tested on R Versions: 4.3.0
+#
 #===============================================================================
 ## Start timer
 start_time <- Sys.time()
