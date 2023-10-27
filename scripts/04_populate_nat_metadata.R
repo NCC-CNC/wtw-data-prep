@@ -231,9 +231,9 @@ for (i in seq_along(file_list)) {
     ## COLOR ---------------------------------------------------------------------
     ## there is no "Color" column in species metadata 
     color <- case_when(
-      identical(source, "ECCC_CH") && identical(u_values, 2) ~  "#00000000, #FFA500",
-      identical(source, "ECCC_CH") && identical(u_values, 1) ~  "#FFA500", 
-      identical(source, "ECCC_CH") && identical(legend, "continuous")  ~  "Oranges",
+      identical(source, "ECCC_CH") && identical(u_values, 2) ~  "#00000000, #756bb1",
+      identical(source, "ECCC_CH") && identical(u_values, 1) ~  "#756bb1", 
+      identical(source, "ECCC_CH") && identical(legend, "continuous")  ~  "Purples",
       identical(source, "ECCC_SAR") && identical(u_values, 2) ~  "#00000000, #fb9a99",
       identical(source, "ECCC_SAR") && identical(u_values, 1) ~  "#fb9a99", 
       identical(source, "ECCC_SAR") && identical(legend, "continuous") ~  "Reds",
