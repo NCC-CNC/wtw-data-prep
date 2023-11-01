@@ -30,6 +30,20 @@ if (!require(wheretowork)) {
   remotes::install_github("NCC-CNC/wheretowork")  
 }
 
+
+# If WTW fails to install, follow these steps ----
+## 1. Create Github account
+## 2. Generate a personal access token (classic) PAT
+## 3. Create a .Renviron file in your Documents directory
+## 4. Paste your PAT in your .Renviron file
+
+# If rcbc fails to install, be sure to have rtools installed for the correct version
+# of your R. We recommend using the latest version of R.
+## https://cran.r-project.org/bin/windows/Rtools/
+
+# If you do not have rgdal installed, run this:
+# devtools::install_url("https://cran.r-project.org/src/contrib/Archive/rgdal/rgdal_1.6-7.tar.gz")
+
 ## Load packages
 library(raster)
 library(dplyr)
