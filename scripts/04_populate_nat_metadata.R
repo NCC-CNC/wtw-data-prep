@@ -32,77 +32,71 @@ source("scripts/functions/fct_init_metadata.R")
 
 # 2.0 Set up -------------------------------------------------------------------
 
-## File path variables ----
+## Name of local WTW project
+WTW_PRJ_NAME <- "sw-on-v2" # <--- CHANGE TO A SHORT WTW PROJECT NAME
+## Path to local WTW project
+PRJ_PATH <- "C:/Data/PRZ/WTW/SW_ONTARIO_V2" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
 
-### CHANGE PATH AND NAMES FOR NEW PROJECT
-output_metadata_name <- "sw-on-v2" 
-
-nat_folder <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2/National"
-tiff_folder <-"C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2/Tiffs"
-metadata_folder <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2/WTW/metadata" 
-table_path <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2/National/_Tables"
-input_pu_name <- "PU.tif"
-
-# NOTE: The datasets required for WTW can be edited at the bottom of the next
-# section by changing the 'WtW' list object
-
+tiff_path <- file.path(PRJ_PATH, "Tiffs")
+meta_path <-  file.path(PRJ_PATH, "WTW/metadata") 
+tbl_path <- file.path(PRJ_PATH, "National/_Tables")   
+pu_path <- file.path(tiff_path, "PU.tif") 
 
 # 3.0 Copy to Tiffs ------------------------------------------------------------
 
-# Get list of files ----
-ECCC_CH <- list.files(file.path(nat_folder, "Themes/ECCC_CH"), 
+ECCC_CH <- list.files(file.path(PRJ_PATH, "National/Themes/ECCC_CH"), 
                       pattern='.tif$', full.names = T, recursive = F)
 
-ECCC_SAR <- list.files(file.path(nat_folder, "Themes/ECCC_SAR"), 
+ECCC_SAR <- list.files(file.path(PRJ_PATH, "National/Themes/ECCC_SAR"), 
                        pattern='.tif$', full.names = T, recursive = F)
 
-IUCN_AMPH <- list.files(file.path(nat_folder, "Themes/IUCN_AMPH"), 
+IUCN_AMPH <- list.files(file.path(PRJ_PATH, "National/Themes/IUCN_AMPH"), 
                         pattern='.tif$', full.names = T, recursive = F)
 
-IUCN_BIRD <- list.files(file.path(nat_folder, "Themes/IUCN_BIRD"), 
+IUCN_BIRD <- list.files(file.path(PRJ_PATH, "National/Themes/IUCN_BIRD"), 
                         pattern='.tif$', full.names = T, recursive = F)
 
-IUCN_MAMM <- list.files(file.path(nat_folder, "Themes/IUCN_MAMM"), 
+IUCN_MAMM <- list.files(file.path(PRJ_PATH, "National/Themes/IUCN_MAMM"), 
                         pattern='.tif$', full.names = T, recursive = F)
 
-IUCN_REPT <- list.files(file.path(nat_folder, "Themes/IUCN_REPT"), 
+IUCN_REPT <- list.files(file.path(PRJ_PATH, "National/Themes/IUCN_REPT"), 
                         pattern='.tif$', full.names = T, recursive = F)
 
-NSC_END <- list.files(file.path(nat_folder, "Themes/NSC_END"), 
+NSC_END <- list.files(file.path(PRJ_PATH, "National/Themes/NSC_END"), 
                       pattern='.tif$', full.names = T, recursive = F)
 
-NSC_SAR <- list.files(file.path(nat_folder, "Themes/NSC_SAR"), 
+NSC_SAR <- list.files(file.path(PRJ_PATH, "National/Themes/NSC_SAR"), 
                       pattern='.tif$', full.names = T, recursive = F)
 
-NSC_SPP <- list.files(file.path(nat_folder, "Themes/NSC_SPP"), 
+NSC_SPP <- list.files(file.path(PRJ_PATH, "National/Themes/NSC_SPP"), 
                       pattern='.tif$', full.names = T, recursive = F)
 
-LC <- list.files(file.path(nat_folder, "Themes/LC"), 
+LC <- list.files(file.path(PRJ_PATH, "National/Themes/LC"), 
                  pattern='.tif$', full.names = T, recursive = F)
 
-KM <- list.files(file.path(nat_folder, "Themes/KM"), 
+KM <- list.files(file.path(PRJ_PATH, "National/Themes/KM"), 
                  pattern='.tif$', full.names = T, recursive = F)
 
-W <- list.files(file.path(nat_folder,"Weights"), 
+W <- list.files(file.path(PRJ_PATH,"National/Weights"), 
                 pattern='.tif$', full.names = T, recursive = F)
 
-Incl <- list.files(file.path(nat_folder, "Includes"), 
+Incl <- list.files(file.path(PRJ_PATH, "National/Includes"), 
                    pattern='.tif$', full.names = T, recursive = F)
 
-Excl <- list.files(file.path(nat_folder, "Excludes"), 
+Excl <- list.files(file.path(PRJ_PATH, "National/Excludes"), 
                    pattern='.tif$', full.names = T, recursive = F)
 
-# Change list here to include or exclude layers to copy ----
+## Change list here to include or exclude layers to copy 
 WtW <- list(ECCC_CH, ECCC_SAR, 
             IUCN_AMPH, IUCN_BIRD, IUCN_MAMM, IUCN_REPT, 
             NSC_END, NSC_SAR, NSC_SPP, 
             LC, KM, 
             W, Incl, Excl)
 
-# Copy files to Tiff folder ----
+## Copy files to Tiff folder 
 for (file in WtW) {
   name <- tools::file_path_sans_ext(basename(file))
-  file.copy(file, paste0(tiff_folder, "/", name, ".tif"))
+  file.copy(file, paste0(tiff_path, "/", name, ".tif"))
 }
 
 
@@ -110,23 +104,22 @@ for (file in WtW) {
 
 ## Read-in metadata xlsx's ----
 ### species
-ECCC_CH_META <- read_excel(file.path(table_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 1)
-ECCC_SAR_META <- read_excel(file.path(table_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 2)
-IUCN_AMPH_META <- read_excel(file.path(table_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 3)
-IUCN_BIRD_META <- read_excel(file.path(table_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 4)
-IUCN_MAMM_META <- read_excel(file.path(table_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 5)
-IUCN_REPT_META <- read_excel(file.path(table_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 6)
-NSC_END_META <- read_excel(file.path(table_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 7)
-NSC_SAR_META <- read_excel(file.path(table_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 8)
-NSC_SPP_META <- read_excel(file.path(table_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 9)
+ECCC_CH_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 1)
+ECCC_SAR_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 2)
+IUCN_AMPH_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 3)
+IUCN_BIRD_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 4)
+IUCN_MAMM_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 5)
+IUCN_REPT_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 6)
+NSC_END_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 7)
+NSC_SAR_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 8)
+NSC_SPP_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 9)
 ### other national themes, weights and includes
-FEATURES_META <- read_excel(file.path(table_path,  "WTW_NAT_FEATURES_METADATA.xlsx"))
+FEATURES_META <- read_excel(file.path(tbl_path,  "WTW_NAT_FEATURES_METADATA.xlsx"))
 
 ## Read-in tiff file paths ----
-file_list <- list.files(tiff_folder, pattern='.tif$', full.names = T, recursive = T) 
+file_list <- list.files(tiff_path, pattern='.tif$', full.names = T, recursive = T) 
 
 ## Remove PU from file list (if it's in there) ----
-pu_path <- file.path(tiff_folder, input_pu_name) 
 file_list <- file_list[file_list != pu_path]
 
 ## Build empty data.frame (template for metadata.csv) ----
@@ -336,7 +329,7 @@ for (i in seq_along(file_list)) {
 # Write to csv ----
 write.csv(
   df,
-  file.path(metadata_folder, paste0(output_metadata_name, "-metadata-NEEDS-QC.csv")),
+  file.path(meta_path, paste0(WTW_PRJ_NAME, "-metadata-NEEDS-QC.csv")),
   row.names = FALSE
 )
 
