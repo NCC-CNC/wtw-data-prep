@@ -178,15 +178,6 @@ rm(natdata_rij) # clear some RAM
 matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
                  paste0(PRJ_PATH, "/Themes/LC"), "T_NAT_LC_", "INT2U")
 
-## Forest - LU (theme) ----
-natdata_r <- rast(file.path(NAT_1KM, "habitat/forest_lu.tif"))
-natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
-rownames(natdata_rij) <- c("Forest-lu")
-matrix_overlap  <- matrix_intersect(natdata_rij, pu_rij)
-rm(natdata_rij) # clear some RAM
-matrix_to_raster(ncc_1km_idx_NA, matrix_overlap, pu_1km_ext,
-                 paste0(PRJ_PATH, "/Themes/LC"), "T_NAT_LC_", "INT2U")
-
 ## Grassland (theme) ----
 natdata_r <- rast(file.path(NAT_1KM, "habitat/grass.tif"))
 natdata_rij <- prioritizr::rij_matrix(ncc_1km, natdata_r)
