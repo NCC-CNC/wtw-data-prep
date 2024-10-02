@@ -1,7 +1,7 @@
 #
 # Authors: Dan Wismer & Jeffrey Hanson
 #
-# Date: September 30th, 2022
+# Date: October 2nd, 2024
 #
 # Description: This script generates the 4 mandatory files required to 
 #              upload project data into Where To Work
@@ -16,7 +16,7 @@
 #          3. Attribute.csv.gz
 #          3. Boundary.csv.gz
 #
-# Tested on R Versions: 4.3.0
+# Requires R version 4.4.1
 #
 #===============================================================================
 ## Start timer
@@ -41,8 +41,6 @@ if (!require(wheretowork)) {
 # of your R. We recommend using the latest version of R.
 ## https://cran.r-project.org/bin/windows/Rtools/
 
-# If you do not have rgdal installed, run this:
-# devtools::install_url("https://cran.r-project.org/src/contrib/Archive/rgdal/rgdal_1.6-7.tar.gz")
 
 ## Load packages
 library(raster)
@@ -53,20 +51,19 @@ library(wheretowork)
 # 2.0 Set up -------------------------------------------------------------------
 
 ## Set path where a QC'd metadata.csv version is located
-metadata_path <- "WTW/metadata/sw-on-v2-metadata.csv" # <--- CHANGE PATH HERE FOR NEW PROJECT
-
-## Set path where rasters are located
-tiffs_path <- "Tiffs" # <--- CHANGE PATH HERE FOR NEW PROJECT
-
-## Name of study area (planning unit) raster
-study_area_file <- "PU/PU.tif" # <--- CHANGE PATH HERE FOR NEW PROJECT
+PRJ_PATH <- "C:/Data/PRZ/WTW/SW_ONTARIO_V3" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
+META_NAME <- "sw-on-v3-metadata.csv" # <--- CHANGE TO NAME OF YOUR WTW/metadata/ .csv. NEED TO ADD ".csv" extenstion
 
 ## Set output variables for WTW file names
-prj_name <- "SW Ontario v2" # <----- spaces allowed
-prj_file_name <-"sw_on_v2" # <----- no spaces allowed
-author_name <- "Dan Wismer" # <----- your name
-author_email <- "dan.wismer@natureconservancy.ca" # <----- your email
-user_groups <- "private" # <---- options: public or private.  
+PRJ_NAME <- "SW Ontario v3" # <----- spaces allowed
+PRJ_FILE_NAME <-"sw_on_v3" # <----- no spaces allowed
+AUTHOR<- "Dan Wismer" # <----- your name
+EMAIL <- "dan.wismer@natureconservancy.ca" # <----- your email
+GROUPS <- "private" # <---- options: public or private.  
+
+meta_path <- file.path(PRJ_PATH, paste0("WTW/metadata/", META_NAME)) 
+tiffs_path <- file.path(PRJ_PATH,"TIFFS")
+pu_path <- file.path(PRJ_PATH,"PU/PU.tif")
 
 
 # 3.0 Import meta data and PUs -------------------------------------------------
@@ -74,7 +71,7 @@ user_groups <- "private" # <---- options: public or private.
 ## Import formatted csv (metadata) as tibble 
 metadata <- tibble::as_tibble(
   utils::read.table(
-    metadata_path, stringsAsFactors = FALSE, sep = ",", header = TRUE,
+    meta_path, stringsAsFactors = FALSE, sep = ",", header = TRUE,
     comment.char = "", quote="\""
   )
 )
@@ -89,7 +86,7 @@ assertthat::assert_that(
 )
 
 ## Import study area (planning units) raster
-study_area_data <- raster::raster(study_area_file)
+pu <- terra::rast(pu_path)
 
 
 # 3.1 Import rasters -----------------------------------------------------------
@@ -98,16 +95,19 @@ study_area_data <- raster::raster(study_area_file)
 ## variable does not stack to study area, re-project raster variable so it aligns 
 ## to the study area
 raster_data <- lapply(file.path(tiffs_path, metadata$File), function(x) {
-  raster_x <- raster::raster(x)
-  if (raster::compareRaster(study_area_data, raster_x, stopiffalse=FALSE)) {
+  raster_x <- terra::rast(x)
+  names(raster_x) <- tools::file_path_sans_ext(basename(x)) # file name
+  if (terra::compareGeom(pu, raster_x, stopOnError=FALSE)) {
     raster_x
   } else {
     print(paste0(names(raster_x), ": can not stack"))
-    print(paste0("... aligning to ", names(study_area_data)))
-    raster::projectRaster(raster_x, to = study_area_data, method = "ngb")
+    print(paste0("... aligning to ", names(pu)))
+    terra::projec(raster_x, y = pu, method = "ngb")
   }
-}) %>% raster::stack()
+}) 
 
+# convert raster list to a combined SpatRaster
+raster_data <- do.call(c, raster_data)
 
 # 4.0 Pre-processing -----------------------------------------------------------
 
@@ -128,7 +128,7 @@ theme_goals <- metadata$Goal[metadata$Type == "theme"]
 
 ## Prepare weight inputs ----
 weight_data <- raster_data[[which(metadata$Type == "weight")]]
-weight_data <- raster::clamp(weight_data, lower = 0)
+weight_data <- terra::clamp(weight_data, lower = 0)
 weight_names <- metadata$Name[metadata$Type == "weight"]
 weight_colors <- metadata$Color[metadata$Type == "weight"]
 weight_units <- metadata$Unit[metadata$Type == "weight"]
@@ -141,7 +141,7 @@ weight_values <- metadata$Values[metadata$Type == "weight"]
 
 ## Prepare include inputs ----
 include_data <- raster_data[[which(metadata$Type == "include")]]
-include_data <- raster::reclassify(include_data, matrix(c(-Inf,0.5,0, 0.5,Inf,1), ncol = 3, byrow = TRUE))
+include_data <- terra::classify(include_data, matrix(c(-Inf,0.5,0, 0.5,Inf,1), ncol = 3, byrow = TRUE))
 include_names <- metadata$Name[metadata$Type == "include"]
 include_colors <- metadata$Color[metadata$Type == "include"]
 include_units <- metadata$Unit[metadata$Type == "include"]
@@ -151,10 +151,10 @@ include_legend <- metadata$Legend[metadata$Type == "include"]
 include_labels <- metadata$Labels[metadata$Type == "include"]
 include_hidden <- metadata$Hidden[metadata$Type == "include"]
 
-## Prepare exclude inputs ----
-exclude_data <- raster_data[[which(metadata$Type == "exclude")]]
-if (length(exclude_data) > 0) {
-  exclude_data <- raster::reclassify(exclude_data, matrix(c(-Inf,0.5,0, 0.5,Inf,1), ncol = 3, byrow = TRUE))
+## Prepare exclude inputs (if there are any) ----
+if ("exclude" %in% unique(metadata$Type)) {
+  exclude_data <- raster_data[[which(metadata$Type == "exclude")]]
+  exclude_data <- terra::classify(exclude_data, matrix(c(-Inf,0.5,0, 0.5,Inf,1), ncol = 3, byrow = TRUE))
   exclude_names <- metadata$Name[metadata$Type == "exclude"]
   exclude_colors <- metadata$Color[metadata$Type == "exclude"]
   exclude_units <- metadata$Unit[metadata$Type == "exclude"]
@@ -163,6 +163,8 @@ if (length(exclude_data) > 0) {
   exclude_legend <- metadata$Legend[metadata$Type == "exclude"]
   exclude_labels <- metadata$Labels[metadata$Type == "exclude"]
   exclude_hidden <- metadata$Hidden[metadata$Type == "exclude"]
+} else {
+  exclude_data <- c()
 }
 
 
@@ -170,7 +172,7 @@ if (length(exclude_data) > 0) {
 
 ## Create data set ----
 dataset <- new_dataset_from_auto(
-  raster::stack(theme_data, weight_data, include_data, exclude_data)
+  c(theme_data, weight_data, include_data, exclude_data)
 )
 
 ## Create themes ----
@@ -202,7 +204,7 @@ themes <- lapply(seq_along(unique(theme_groups)), function(i) {
         dataset = dataset,
         index = curr_theme_data_names[j],
         units = curr_theme_units[j],
-        total = raster::cellStats(curr_theme_data[[j]], "sum"),
+        total = terra::global(curr_theme_data[[j]], fun ="sum", na.rm = TRUE)$sum,
         legend = new_manual_legend(
           values = c(as.numeric(trimws(unlist(strsplit(curr_theme_values[j], ","))))),
           colors = c(trimws(unlist(strsplit(curr_theme_colors[j], ",")))),
@@ -230,7 +232,7 @@ themes <- lapply(seq_along(unique(theme_groups)), function(i) {
         dataset = dataset,
         index = curr_theme_data_names[j],
         units = " ",
-        total = raster::cellStats(curr_theme_data[[j]], "sum"),
+        total = terra::global(curr_theme_data[[j]], fun ="sum", na.rm = TRUE)$sum,
         legend = new_null_legend(),
         provenance = new_provenance_from_source("missing")
       )
@@ -258,7 +260,7 @@ themes <- lapply(seq_along(unique(theme_groups)), function(i) {
 ## Create includes ----
 
 ### loop over each raster in include_data
-includes <- lapply(seq_len(raster::nlayers(include_data)), function(i) {
+includes <- lapply(seq_len(terra::nlyr(include_data)), function(i) {
   
   ### build legend
   if (identical(include_legend[i], "null")) {
@@ -280,7 +282,7 @@ includes <- lapply(seq_len(raster::nlayers(include_data)), function(i) {
       dataset = dataset,
       index = names(include_data)[i],
       units = " ",
-      total = raster::cellStats(include_data[[i]], "sum"),
+      total = terra::global(include_data[[i]], fun = "sum", na.rm = TRUE)$sum,
       legend = legend,
       provenance = new_provenance_from_source(include_provenance[i])
     )
@@ -291,39 +293,42 @@ includes <- lapply(seq_len(raster::nlayers(include_data)), function(i) {
 
 ## Create excludes ----
 ### loop over each raster in exclude_data
-excludes <- lapply(seq_len(raster::nlayers(exclude_data)), function(i) {
-  
-  ### build legend
-  if (identical(exclude_legend[i], "null")) {
-    legend <- new_null_legend()
-  } else {
-    legend <- new_manual_legend(
-      values = c(0, 1),
-      colors = trimws(unlist(strsplit(exclude_colors[i], ","))),
-      labels = unlist(strsplit(exclude_labels[i], ","))
+if (!is.null(exclude_data)){
+  excludes <- lapply(seq_len(terra::nlyr(exclude_data)), function(i) {
+    
+    ### build legend
+    if (identical(exclude_legend[i], "null")) {
+      legend <- new_null_legend()
+    } else {
+      legend <- new_manual_legend(
+        values = c(0, 1),
+        colors = trimws(unlist(strsplit(exclude_colors[i], ","))),
+        labels = unlist(strsplit(exclude_labels[i], ","))
+      )
+    }
+    
+    ### build exclude
+    new_exclude(
+      name = exclude_names[i],
+      visible = exclude_visible[i],
+      hidden = exclude_hidden[i],
+      variable = new_variable(
+        dataset = dataset,
+        index = names(exclude_data)[i],
+        units = " ",
+        total = terra::global(exclude_data[[i]], fun = "sum", na.rm = TRUE)$sum,
+        legend = legend,
+        provenance = new_provenance_from_source(exclude_provenance[i])
+      )
     )
-  }
-  
-  ### build exclude
-  new_exclude(
-    name = exclude_names[i],
-    visible = exclude_visible[i],
-    hidden = exclude_hidden[i],
-    variable = new_variable(
-      dataset = dataset,
-      index = names(exclude_data)[i],
-      units = " ",
-      total = raster::cellStats(exclude_data[[i]], "sum"),
-      legend = legend,
-      provenance = new_provenance_from_source(exclude_provenance[i])
-    )
-  )
-})
+  })
+}
+
 
 ## Create weights ---- 
 
 ### loop over each raster in weight_data
-weights <- lapply(seq_len(raster::nlayers(weight_data)), function(i) {
+weights <- lapply(seq_len(terra::nlyr(weight_data)), function(i) {
   
   #### prepare variable (if manual legend)
   if (identical(weight_legend[i], "manual")) {
@@ -343,7 +348,7 @@ weights <- lapply(seq_len(raster::nlayers(weight_data)), function(i) {
       dataset = dataset,
       index = names(weight_data)[i],
       units = " ",
-      total = raster::cellStats(weight_data[[i]], "sum"),
+      total = terra::global(weight_data[[i]], fun = "sum", na.rm=TRUE)$sum,
       legend = new_null_legend(),
       provenance = new_provenance_from_source("missing")
     )
@@ -368,19 +373,25 @@ weights <- lapply(seq_len(raster::nlayers(weight_data)), function(i) {
 
 # 6.0  Export Where To Work objects --------------------------------------------
 
+if (!is.null(exclude_data)) {
+  wtw_objects <- append(append(themes, append(includes, weights)), excludes)
+} else {
+  wtw_objects <- append(themes, append(includes, weights))
+}
+
 ## Save project to disk ---- <--- CHANGE FOR NEW PROJECT
 write_project(
-  x = append(append(themes, append(includes, weights)), excludes),
+  x = wtw_objects,
   dataset = dataset,
-  name = prj_name, 
-  path = paste0("WTW/", prj_file_name, ".yaml"),
-  spatial_path = paste0("WTW/", prj_file_name, ".tif"),
-  attribute_path = paste0("WTW/", prj_file_name, "_attribute.csv.gz"), 
-  boundary_path = paste0("WTW/", prj_file_name, "_boundary.csv.gz"),
+  name = PRJ_NAME, 
+  path = file.path(PRJ_PATH, "WTW", paste0(PRJ_FILE_NAME, ".yaml")),
+  spatial_path = file.path(PRJ_PATH, "WTW", paste0(PRJ_FILE_NAME, ".tif")),
+  attribute_path = file.path(PRJ_PATH, "WTW", paste0(PRJ_FILE_NAME, "_attribute.csv.gz")), 
+  boundary_path = file.path(PRJ_PATH, "WTW", paste0(PRJ_FILE_NAME, "_boundary.csv.gz")),
   mode = "advanced",
-  user_groups = user_groups,
-  author_name = author_name, 
-  author_email = author_email 
+  user_groups = GROUPS,
+  author_name = AUTHOR, 
+  author_email = EMAIL 
 )
 
 
