@@ -1,6 +1,6 @@
 # Authors: Dan Wismer, Marc Edwards & Richard Schuster
 #
-# Date: June 27, 2024
+# Date: October 2nd, 2024
 #
 # Description: This script extracts national 1km data to a local 1km pu grid
 #
@@ -10,7 +10,7 @@
 # Outputs: 1. a 1km x 1km raster layer for each variable that intersects 
 #             the pu's
 #
-# Tested on R Versions: 4.3.0 and 4.3.1 
+# Tested on R Versions: 4.4.1
 #
 #===============================================================================
 # Start timer
@@ -33,11 +33,11 @@ terra::gdalCache(size = 8000) # set cache to 8gb
 
 
 ## Nat 1KM data
-NAT_1KM <- "C:/Data/PRZ/NAT_DATA/NAT_1KM_20240626" # <--- CHANGE TO YOUR NAT_1KM PATH
+NAT_1KM <- "C:/Data/PRZ/NAT_DATA/NAT_1KM_20240729" # <--- CHANGE TO YOUR NAT_1KM PATH
 ## Prepped planning units
-PU_TIF <- "C:/Data/PRZ/WTW/SW_ONTARIO_V2/PU/PU.tif" # <--- SET PATH TO PU.tif
+PU_TIF <- "C:/Data/PRZ/WTW/SW_ONTARIO_V3/PU/PU.tif" # <--- SET PATH TO PU.tif
 ## WTW National project path
-PRJ_PATH <- "C:/Data/PRZ/WTW/SW_ONTARIO_V2/National" # <--- SET OUTPUT PATH FOR CLIPPED RASTERS. PONT TO "National" FOLDER WITHIN YOUR PROJECT. 
+PRJ_PATH <- "C:/Data/PRZ/WTW/SW_ONTARIO_V3/National" # <--- SET OUTPUT PATH FOR CLIPPED RASTERS. PONT TO "National" FOLDER WITHIN YOUR PROJECT. 
 
 # 3.0 prep folders and PUs -----------------------------------------------------
 

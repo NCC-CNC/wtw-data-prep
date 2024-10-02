@@ -1,7 +1,7 @@
 #
 # Author: Dan Wismer & Marc Edwards
 #
-# Date: Aug 28th, 2023
+# Date: October 2nd, 2024
 #
 # Description: Copies prepped National rasters to the Tiffs folder.
 #              Generates a metadata.csv for all national layers. This csv is 
@@ -12,7 +12,7 @@
 #
 # Outputs: 1. A metadata.csv to QC (quality control)
 #
-# Tested on R Versions: 4.3.0
+# Tested on R Versions: 4.4.1
 #
 #===============================================================================
 ## Start timer
@@ -33,9 +33,9 @@ source("scripts/functions/fct_init_metadata.R")
 # 2.0 Set up -------------------------------------------------------------------
 
 ## Name of local WTW project
-WTW_PRJ_NAME <- "sw-on-v2" # <--- CHANGE TO A SHORT WTW PROJECT NAME
+WTW_PRJ_NAME <- "sw-on-v3" # <--- CHANGE TO A SHORT WTW PROJECT NAME
 ## Path to local WTW project
-PRJ_PATH <- "C:/Data/PRZ/WTW/SW_ONTARIO_V2" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
+PRJ_PATH <- "C:/Data/PRZ/WTW/SW_ONTARIO_V3" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
 
 tiff_path <- file.path(PRJ_PATH, "Tiffs")
 meta_path <-  file.path(PRJ_PATH, "WTW/metadata") 

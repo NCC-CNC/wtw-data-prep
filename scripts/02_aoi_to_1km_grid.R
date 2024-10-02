@@ -1,7 +1,7 @@
 #
 # Author: Dan Wismer
 #
-# Date: June 26th, 2024
+# Date: October 2nd, 2024
 #
 # Description: Generates vector and raster 1km PU's from a aoi shapefile. 
 #              Outputs take the extent of the input shapefile aoi.
@@ -14,7 +14,7 @@
 #          2. 1km raster grid (values are all 1)
 #          3. 1km raster grid (values are all 0)
 #
-# Tested on R Versions: 4.3.0
+# Tested on R Versions: 4.4.1
 #
 #===============================================================================
 # Start timer
@@ -29,13 +29,13 @@ library(dplyr)
 # 2.0 Set up -------------------------------------------------------------------
 
 # Nat 1KM
-NAT_1KM <- "C:/Data/PRZ/NAT_DATA/NAT_1KM_20240626" # <- CHANGE TO YOUR NAT_1KM PATH
+NAT_1KM <- "C:/Data/PRZ/NAT_DATA/NAT_1KM_20240729" # <- CHANGE TO YOUR NAT_1KM PATH
 
 # Input boundary shapefile (aoi) path
-AOI <- "C:/Data/PRZ/WTW/SW_ONTARIO_V2/PU/AOI.shp" # <- CHANGE TO YOUR SHP PATH
+AOI <- "C:/Data/PRZ/WTW/SW_ONTARIO_V3/PU/AOI.shp" # <- CHANGE TO YOUR SHP PATH
 
 # Output folder 
-OUTPUT <- "C:/Data/PRZ/WTW/SW_ONTARIO_V2/PU" # <- CHANGE TO YOUR OUTPUT FOLDER PATH. POINT TO "PU" FOLDER.
+OUTPUT <- "C:/Data/PRZ/WTW/SW_ONTARIO_V3/PU" # <- CHANGE TO YOUR OUTPUT FOLDER PATH. POINT TO "PU" FOLDER.
 
 # Read-in 1km index grid
 IDX_PATH <- file.path(NAT_1KM, "_1km/idx.tif" ) 
