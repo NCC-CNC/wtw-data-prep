@@ -43,7 +43,7 @@ if (!require(wheretowork)) {
 
 
 ## Load packages
-library(raster)
+library(terra)
 library(dplyr)
 library(wheretowork)
 
