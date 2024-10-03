@@ -23,9 +23,17 @@
 # 1.0 Install required packages ------------------------------------------------------------
 
 ## Package names
-packages <- c("raster", "dplyr", "sf", "terra", "fasterize", "prioritizr", 
-              "sp", "stringr", "gdalUtilities", "tibble", "stringr", "readr", 
-              "readxl")
+packages <- c(
+  "dplyr", 
+  "gdalUtilities",
+  "prioritizr",
+  "sf",
+  "stringr", 
+  "terra", 
+  "tibble", 
+  "readr", 
+  "readxl"
+)
 
 ## Install packages not yet installed
 installed_packages <- packages %in% rownames(installed.packages())
