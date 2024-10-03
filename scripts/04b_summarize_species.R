@@ -1,6 +1,6 @@
 # Authors: Dan Wismer & Marc Edwards
 #
-# Date: Sept 18th, 2023
+# Date: Oct 3rd, 2023
 #
 # Description: Summarizes national data in tiff folder
 #
@@ -10,7 +10,7 @@
 # Outputs: 1. a csv that lists metadata on each feature such as total area and 
 #             % protected inside and outside of AOI
 #
-# Tested on R Versions: 4.3.0
+# Tested on R Versions: 4.4.1
 #
 #===============================================================================
 # Start timer
@@ -24,13 +24,13 @@ library(stringr)
 library(terra)
 
 ## Set folder paths ----
-PRJ_PATH <- "C:/Data/PRZ/WTW/SW_ONTARIO_V2" # <--- CHANGE TO LOCAL WTW PROJECT
+PRJ_PATH <- "C:/Data/PRZ/WTW/SW_ONTARIO_V3" # <--- CHANGE TO LOCAL WTW PROJECT
 
 tif_path <- file.path(PRJ_PATH, "Tiffs")
 tbl_path <- file.path(PRJ_PATH, "National/_Tables")
 
 ## Set output csv ----
-output_csv <- file.path(PRJ_PATH, "Tiffs/METADATA.csv")
+output_csv <- file.path(PRJ_PATH, "National/_TABLES/WTW_PROJECT_SPECIES_SUMMARY.csv")
 
 # Read-in metadata xlsx's ----
 ## species
@@ -68,9 +68,6 @@ df <- data.frame(
   Theme = character(), # layer theme
   Sci_Name = character(), # scientific name
   Common_Name = character(), # common name
-  CA_Total_Km2 = numeric(), # total range / AOH area in Canada
-  CA_Protected_Km2 = numeric(), # total range / AOH protected in Canada
-  CA_Pct_Protected = numeric(), # % total range / AOH protected protected in Canada
   Goal = numeric(), # species goal
   WTW_Total_Km2 = numeric(), # total range / AOH area in WTW project
   WTW_Protected_Km2 = numeric(), # total range / AOH protected in WTW project
@@ -146,12 +143,6 @@ for (i in seq_along(tif_lst)) {
     sci <- suppressWarnings(ifelse(is.null(wtw_meta_row$Sci_Name), "", wtw_meta_row$Sci_Name))
     ### get common name
     com <- suppressWarnings(ifelse(is.null(wtw_meta_row$Common_Name), "", wtw_meta_row$Common_Name))
-    ### get total range / AOH area in Canada
-    ca_km2 <- suppressWarnings(ifelse(is.null(wtw_meta_row$Total_Km2), "", wtw_meta_row$Total_Km2))
-    ### get range / AOH protected in Canada
-    ca_i <- suppressWarnings(ifelse(is.null(wtw_meta_row$Protected_Km2), "", wtw_meta_row$Protected_Km2))
-    ### get range / AOH % protected in Canada
-    ca_pct_i <- suppressWarnings(ifelse(is.null(wtw_meta_row$Pct_Protected), "", wtw_meta_row$Pct_Protected))
     ### get goal
     goal <- suppressWarnings(ifelse(is.null(wtw_meta_row$Goal), "", wtw_meta_row$Goal))
   }
@@ -176,7 +167,7 @@ for (i in seq_along(tif_lst)) {
     ## national row 
     new_row <- c(
       source, type, file, prv, theme, sci, com, 
-      ca_km2, ca_i, ca_pct_i, goal,
+      goal,
       prj_km2, prj_i, prj_pct_i
     )
   } else {
