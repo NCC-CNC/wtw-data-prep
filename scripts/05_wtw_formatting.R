@@ -101,7 +101,7 @@ raster_data <- lapply(file.path(tiffs_path, metadata$File), function(x) {
   } else {
     print(paste0(names(raster_x), ": can not stack"))
     print(paste0("... aligning to ", names(pu)))
-    terra::projec(raster_x, y = pu, method = "ngb")
+    terra::project(raster_x, y = pu, method = "ngb")
   }
 }) 
 
