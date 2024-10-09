@@ -125,30 +125,38 @@ theme_labels <- metadata$Labels[metadata$Type == "theme"]
 theme_values <- metadata$Values[metadata$Type == "theme"]
 theme_goals <- metadata$Goal[metadata$Type == "theme"]
 
-## Prepare weight inputs ----
-weight_data <- raster_data[[which(metadata$Type == "weight")]]
-weight_data <- terra::clamp(weight_data, lower = 0)
-weight_names <- metadata$Name[metadata$Type == "weight"]
-weight_colors <- metadata$Color[metadata$Type == "weight"]
-weight_units <- metadata$Unit[metadata$Type == "weight"]
-weight_visible <- metadata$Visible[metadata$Type == "weight"]
-weight_hidden <- metadata$Hidden[metadata$Type == "weight"]
-weight_provenance <- metadata$Provenance[metadata$Type == "weight"]
-weight_legend <- metadata$Legend[metadata$Type == "weight"]
-weight_labels <- metadata$Labels[metadata$Type == "weight"]
-weight_values <- metadata$Values[metadata$Type == "weight"]
+## Prepare weight inputs (if there are any) ----
+if ("weight" %in% unique(metadata$Type)) {
+  weight_data <- raster_data[[which(metadata$Type == "weight")]]
+  weight_data <- terra::clamp(weight_data, lower = 0)
+  weight_names <- metadata$Name[metadata$Type == "weight"]
+  weight_colors <- metadata$Color[metadata$Type == "weight"]
+  weight_units <- metadata$Unit[metadata$Type == "weight"]
+  weight_visible <- metadata$Visible[metadata$Type == "weight"]
+  weight_hidden <- metadata$Hidden[metadata$Type == "weight"]
+  weight_provenance <- metadata$Provenance[metadata$Type == "weight"]
+  weight_legend <- metadata$Legend[metadata$Type == "weight"]
+  weight_labels <- metadata$Labels[metadata$Type == "weight"]
+  weight_values <- metadata$Values[metadata$Type == "weight"]
+} else {
+  weight_data <- c() # no weights in project
+}
 
-## Prepare include inputs ----
-include_data <- raster_data[[which(metadata$Type == "include")]]
-include_data <- terra::classify(include_data, matrix(c(-Inf,0.5,0, 0.5,Inf,1), ncol = 3, byrow = TRUE))
-include_names <- metadata$Name[metadata$Type == "include"]
-include_colors <- metadata$Color[metadata$Type == "include"]
-include_units <- metadata$Unit[metadata$Type == "include"]
-include_visible <- metadata$Visible[metadata$Type == "include"]
-include_provenance <- metadata$Provenance[metadata$Type == "include"]
-include_legend <- metadata$Legend[metadata$Type == "include"]
-include_labels <- metadata$Labels[metadata$Type == "include"]
-include_hidden <- metadata$Hidden[metadata$Type == "include"]
+## Prepare include inputs (if there are any) ----
+if ("include" %in% unique(metadata$Type)) {
+  include_data <- raster_data[[which(metadata$Type == "include")]]
+  include_data <- terra::classify(include_data, matrix(c(-Inf,0.5,0, 0.5,Inf,1), ncol = 3, byrow = TRUE))
+  include_names <- metadata$Name[metadata$Type == "include"]
+  include_colors <- metadata$Color[metadata$Type == "include"]
+  include_units <- metadata$Unit[metadata$Type == "include"]
+  include_visible <- metadata$Visible[metadata$Type == "include"]
+  include_provenance <- metadata$Provenance[metadata$Type == "include"]
+  include_legend <- metadata$Legend[metadata$Type == "include"]
+  include_labels <- metadata$Labels[metadata$Type == "include"]
+  include_hidden <- metadata$Hidden[metadata$Type == "include"]
+} else {
+  include_data <- c() # no includes in project
+}
 
 ## Prepare exclude inputs (if there are any) ----
 if ("exclude" %in% unique(metadata$Type)) {
@@ -168,6 +176,7 @@ if ("exclude" %in% unique(metadata$Type)) {
 
 
 # 5.0 Build wheretowork objects ------------------------------------------------
+
 # Requires wheretowork package (version 1.0.0)
 
 ## Create dataset ----
@@ -175,8 +184,7 @@ dataset <- wheretowork::new_dataset_from_auto(
   c(theme_data, weight_data, include_data, exclude_data)
 )
 
-## Create themes ----
-
+## Create themes (must have) ----
 ### loop over unique theme groups (ex. Endemic Species, Species at Risk, etc.)
 themes <- lapply(seq_along(unique(theme_groups)), function(i) {
   
@@ -257,88 +265,86 @@ themes <- lapply(seq_along(unique(theme_groups)), function(i) {
   curr_theme
 })
 
-## Create weights ----
-
-### loop over each raster in weight_data
-weights <- lapply(seq_len(terra::nlyr(weight_data)), function(i) {
-  
-  #### prepare variable (if manual legend)
-  if (identical(weight_legend[i], "manual")) {
-    v <- wheretowork::new_variable_from_auto(
-      dataset = dataset,
-      index = names(weight_data)[i],
-      units = weight_units[i],
-      type = "manual",
-      colors = trimws(unlist(strsplit(weight_colors[i], ","))),
-      provenance = weight_provenance[i],
-      labels = trimws(unlist(strsplit(weight_labels[i], ",")))
-    )
+## Create weights (if there are any) ----
+if (!is.null(weight_data)) {
+  weights <- lapply(seq_len(terra::nlyr(weight_data)), function(i) {
     
-    #### prepare variable (if null legend)    
-  } else if (identical(weight_legend[i], "null")) {
-    v <- wheretowork::new_variable(
-      dataset = dataset,
-      index = names(weight_data)[i],
-      units = " ",
-      total = terra::global(weight_data[[i]], fun = "sum", na.rm=TRUE)$sum,
-      legend = new_null_legend(),
-      provenance = wheretowork::new_provenance_from_source("missing")
-    )
+    #### prepare variable (if manual legend)
+    if (identical(weight_legend[i], "manual")) {
+      v <- wheretowork::new_variable_from_auto(
+        dataset = dataset,
+        index = names(weight_data)[i],
+        units = weight_units[i],
+        type = "manual",
+        colors = trimws(unlist(strsplit(weight_colors[i], ","))),
+        provenance = weight_provenance[i],
+        labels = trimws(unlist(strsplit(weight_labels[i], ",")))
+      )
+      
+      #### prepare variable (if null legend)    
+    } else if (identical(weight_legend[i], "null")) {
+      v <- wheretowork::new_variable(
+        dataset = dataset,
+        index = names(weight_data)[i],
+        units = " ",
+        total = terra::global(weight_data[[i]], fun = "sum", na.rm=TRUE)$sum,
+        legend = new_null_legend(),
+        provenance = wheretowork::new_provenance_from_source("missing")
+      )
+      
+      ### prepare variable (if continuous legend)    
+    } else if (identical(weight_legend[i], "continuous")) { 
+      v <- wheretowork::new_variable_from_auto(
+        dataset = dataset,
+        index = names(weight_data)[i],
+        units = weight_units[i],
+        type = "continuous",
+        colors = weight_colors[i],
+        provenance = weight_provenance[i]
+      )
+    }
     
-    ### prepare variable (if continuous legend)    
-  } else if (identical(weight_legend[i], "continuous")) { 
-    v <- wheretowork::new_variable_from_auto(
-      dataset = dataset,
-      index = names(weight_data)[i],
-      units = weight_units[i],
-      type = "continuous",
-      colors = weight_colors[i],
-      provenance = weight_provenance[i]
+    #### create weight
+    wheretowork::new_weight(
+      name = weight_names[i], variable = v, 
+      visible = weight_visible[i], hidden = weight_hidden[i]
     )
-  }
-  
-  #### create weight
-  wheretowork::new_weight(
-    name = weight_names[i], variable = v, 
-    visible = weight_visible[i], hidden = weight_hidden[i]
-  )
-})
+  })
+}
 
-## Create includes ----
-
-### loop over each raster in include_data
-includes <- lapply(seq_len(terra::nlyr(include_data)), function(i) {
-  
-  ### build legend
-  if (identical(include_legend[i], "null")) {
-    legend <- wheretowork::new_null_legend()
-  } else {
-    legend <- wheretowork::new_manual_legend(
-      values = c(0, 1),
-      colors = trimws(unlist(strsplit(include_colors[i], ","))),
-      labels = unlist(strsplit(include_labels[i], ","))
+## Create includes (if there are any) ----
+if (!is.null(include_data)) {
+  includes <- lapply(seq_len(terra::nlyr(include_data)), function(i) {
+    
+    ### build legend
+    if (identical(include_legend[i], "null")) {
+      legend <- wheretowork::new_null_legend()
+    } else {
+      legend <- wheretowork::new_manual_legend(
+        values = c(0, 1),
+        colors = trimws(unlist(strsplit(include_colors[i], ","))),
+        labels = unlist(strsplit(include_labels[i], ","))
+      )
+    }
+    
+    ### build include
+    wheretowork::new_include(
+      name = include_names[i],
+      visible = include_visible[i],
+      hidden = include_hidden[i],
+      variable = wheretowork::new_variable(
+        dataset = dataset,
+        index = names(include_data)[i],
+        units = " ",
+        total = terra::global(include_data[[i]], fun = "sum", na.rm = TRUE)$sum,
+        legend = legend,
+        provenance = wheretowork::new_provenance_from_source(include_provenance[i])
+      )
     )
-  }
-  
-  ### build include
-  wheretowork::new_include(
-    name = include_names[i],
-    visible = include_visible[i],
-    hidden = include_hidden[i],
-    variable = wheretowork::new_variable(
-      dataset = dataset,
-      index = names(include_data)[i],
-      units = " ",
-      total = terra::global(include_data[[i]], fun = "sum", na.rm = TRUE)$sum,
-      legend = legend,
-      provenance = wheretowork::new_provenance_from_source(include_provenance[i])
-    )
-  )
-})
+  })
+}
 
-## Create excludes ----
-
-### loop over each raster in exclude_data
+## Create excludes (if there are any) ----
 if (!is.null(exclude_data)){
   excludes <- lapply(seq_len(terra::nlyr(exclude_data)), function(i) {
     
@@ -372,11 +378,20 @@ if (!is.null(exclude_data)){
 
 # 6.0  Export Where To Work objects --------------------------------------------
 
-if (!is.null(exclude_data)) {
-  wtw_objects <- append(append(themes, append(includes, weights)), excludes)
-} else {
-  wtw_objects <- append(themes, append(includes, weights))
+if (!is.null(weight_data)) {
+  wtw_objects <- append(themes, weights) # Themes and Weights
+} else{
+  wtw_objects <- themes # Themes
 }
+
+if (!is.null(include_data)) {
+  wtw_objects <- append(wtw_objects, includes) # Themes, Weights and Includes
+} 
+
+if (!is.null(exclude_data)) {
+  wtw_objects <- append(wtw_objects, excludes) # Themes, Weights Includes and Excludes
+} 
+
 
 ## Save project to disk ---- 
 wheretowork::write_project(
