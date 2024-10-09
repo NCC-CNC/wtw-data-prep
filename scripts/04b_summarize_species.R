@@ -1,6 +1,6 @@
 # Authors: Dan Wismer & Marc Edwards
 #
-# Date: Sept 18th, 2023
+# Date: Oct 3rd, 2023
 #
 # Description: Summarizes national data in tiff folder
 #
@@ -10,7 +10,7 @@
 # Outputs: 1. a csv that lists metadata on each feature such as total area and 
 #             % protected inside and outside of AOI
 #
-# Tested on R Versions: 4.3.0
+# Tested on R Versions: 4.4.1
 #
 #===============================================================================
 # Start timer
@@ -24,36 +24,36 @@ library(stringr)
 library(terra)
 
 ## Set folder paths ----
-prj_folder <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2" # <--- CHANGE FOR NEW WTW PROJECT
-nat_folder <- file.path(prj_folder, "National")
-tif_folder <- file.path(prj_folder, "Tiffs")
-tbl_folder <- file.path(nat_folder, "_Tables")
+PRJ_PATH <- "C:/Data/PRZ/WTW/SW_ONTARIO_V3" # <--- CHANGE TO LOCAL WTW PROJECT
+
+tif_path <- file.path(PRJ_PATH, "Tiffs")
+tbl_path <- file.path(PRJ_PATH, "National/_Tables")
 
 ## Set output csv ----
-output_csv <- file.path(prj_folder, "Tiffs/METADATA.csv")
+output_csv <- file.path(PRJ_PATH, "National/_TABLES/WTW_PROJECT_SPECIES_SUMMARY.csv")
 
 # Read-in metadata xlsx's ----
 ## species
-ECCC_CH_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 1)
-ECCC_SAR_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 2)
-IUCN_AMPH_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 3)
-IUCN_BIRD_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 4)
-IUCN_MAMM_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 5)
-IUCN_REPT_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 6)
-NSC_END_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 7)
-NSC_SAR_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 8)
-NSC_SPP_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 9)
+ECCC_CH_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 1)
+ECCC_SAR_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 2)
+IUCN_AMPH_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 3)
+IUCN_BIRD_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 4)
+IUCN_MAMM_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 5)
+IUCN_REPT_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 6)
+NSC_END_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 7)
+NSC_SAR_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 8)
+NSC_SPP_META <- read_excel(file.path(tbl_path,  "WTW_NAT_SPECIES_METADATA.xlsx"), sheet = 9)
 ## other national themes, weights and includes
-FEATURES_META <- read_excel(file.path(tbl_folder,  "WTW_NAT_FEATURES_METADATA.xlsx"))
+FEATURES_META <- read_excel(file.path(tbl_path,  "WTW_NAT_FEATURES_METADATA.xlsx"))
 
 # List files in Tiffs folder ----
 tif_lst <- list.files(
-  tif_folder, pattern='.tif$', full.names = TRUE, recursive = FALSE
+  tif_path, pattern='.tif$', full.names = TRUE, recursive = FALSE
 )
 
 # List includes ----
 include_lst <- list.files(
-  tif_folder, pattern='^I.*\\.tif$', full.names = TRUE, recursive = FALSE
+  tif_path, pattern='^I.*\\.tif$', full.names = TRUE, recursive = FALSE
 )
 
 # Mosaic includes into one raster ----
@@ -68,9 +68,6 @@ df <- data.frame(
   Theme = character(), # layer theme
   Sci_Name = character(), # scientific name
   Common_Name = character(), # common name
-  CA_Total_Km2 = numeric(), # total range / AOH area in Canada
-  CA_Protected_Km2 = numeric(), # total range / AOH protected in Canada
-  CA_Pct_Protected = numeric(), # % total range / AOH protected protected in Canada
   Goal = numeric(), # species goal
   WTW_Total_Km2 = numeric(), # total range / AOH area in WTW project
   WTW_Protected_Km2 = numeric(), # total range / AOH protected in WTW project
@@ -146,12 +143,6 @@ for (i in seq_along(tif_lst)) {
     sci <- suppressWarnings(ifelse(is.null(wtw_meta_row$Sci_Name), "", wtw_meta_row$Sci_Name))
     ### get common name
     com <- suppressWarnings(ifelse(is.null(wtw_meta_row$Common_Name), "", wtw_meta_row$Common_Name))
-    ### get total range / AOH area in Canada
-    ca_km2 <- suppressWarnings(ifelse(is.null(wtw_meta_row$Total_Km2), "", wtw_meta_row$Total_Km2))
-    ### get range / AOH protected in Canada
-    ca_i <- suppressWarnings(ifelse(is.null(wtw_meta_row$Protected_Km2), "", wtw_meta_row$Protected_Km2))
-    ### get range / AOH % protected in Canada
-    ca_pct_i <- suppressWarnings(ifelse(is.null(wtw_meta_row$Pct_Protected), "", wtw_meta_row$Pct_Protected))
     ### get goal
     goal <- suppressWarnings(ifelse(is.null(wtw_meta_row$Goal), "", wtw_meta_row$Goal))
   }
@@ -176,7 +167,7 @@ for (i in seq_along(tif_lst)) {
     ## national row 
     new_row <- c(
       source, type, file, prv, theme, sci, com, 
-      ca_km2, ca_i, ca_pct_i, goal,
+      goal,
       prj_km2, prj_i, prj_pct_i
     )
   } else {
