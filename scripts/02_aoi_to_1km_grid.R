@@ -1,22 +1,20 @@
 #
 # Author: Dan Wismer
 #
-# Date: July 19th, 2023
+# Date: October 2nd, 2024
 #
-# Description: Generates vector and raster 1km PU's from a boundary shapefile. 
-#              Outputs take the extent of the input shapefile boundary.
+# Description: Generates vector and raster 1km PU's from a aoi shapefile. 
+#              Outputs take the extent of the input shapefile aoi.
 #
-# Inputs:  1. Output folder location
-#          2. Input shapefile boundary
-#          3. Constant_1KM_IDX.tif; The the NCC constant grid where each cell 
-#             value is the index (4700 rows, 5700 cols, 26790000 cells, 
-#             Canada_Albers_WGS_1984).
+# Inputs:  1. NAT_1KM data
+#          2. Input shapefile aoi
+#          3. Output folder
 #
 # Outputs: 1. 1km vector grid with NCCID and PUID 
 #          2. 1km raster grid (values are all 1)
 #          3. 1km raster grid (values are all 0)
 #
-# Tested on R Versions: 4.3.0
+# Tested on R Versions: 4.4.1
 #
 #===============================================================================
 # Start timer
@@ -30,30 +28,33 @@ library(dplyr)
 
 # 2.0 Set up -------------------------------------------------------------------
 
-# Input boundary shapefile path
-SHP <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2/PU/AOI.shp" # <- CHANGE TO YOUR SHP PATH
+# Nat 1KM
+NAT_1KM <- "C:/Data/PRZ/NAT_DATA/NAT_1KM_20240729" # <- CHANGE TO YOUR NAT_1KM PATH
 
-# Output folder path to save PU.shp, PU.tif and PU0.tif
-OUTPUT <- "C:/Data/PRZ/WTW_PROJECTS/SW_ONTARIO_V2/PU" # <- CHANGE TO YOUR OUTPUT FOLDER PATH
+# Input boundary shapefile (aoi) path
+AOI <- "C:/Data/PRZ/WTW/SW_ONTARIO_V3/PU/AOI.shp" # <- CHANGE TO YOUR SHP PATH
 
-# Read-in constant 1km raster grid
-CONSTANT_1KM_IDX_PATH <- "C:/Data/PRZ/WTW_DATA/WTW_NAT_DATA_20230921/nat_pu/Constant_1KM_IDX.tif" # <- CHANGE TO YOUR GRID PATH
-CONSTANT_1KM_IDX <- rast(CONSTANT_1KM_IDX_PATH ) 
+# Output folder 
+OUTPUT <- "C:/Data/PRZ/WTW/SW_ONTARIO_V3/PU" # <- CHANGE TO YOUR OUTPUT FOLDER PATH. POINT TO "PU" FOLDER.
+
+# Read-in 1km index grid
+IDX_PATH <- file.path(NAT_1KM, "_1km/idx.tif" ) 
+IDX <- rast(IDX_PATH) 
 
 # 3.0 Processing ---------------------------------------------------------------
 
 # Read-in boundary shapefile
-Boundary <- read_sf(SHP) %>% 
-  st_transform(crs = st_crs(CONSTANT_1KM_IDX))
+aoi <- read_sf(AOI) %>% 
+  st_transform(crs = st_crs(IDX)) # project to Canada_Albers_WGS_1984
 
 # Rasterize boundary polygon: 4700 rows, 5700 cols, 26790000 cells
-pu_1km <- Boundary %>%
+pu_1km <- aoi %>%
   mutate(BURN = 1) %>%
   st_buffer(1000) %>% # buffer by 1km
-  rasterize(CONSTANT_1KM_IDX, "BURN")
+  rasterize(IDX, "BURN")
 
-# Raster 1km grid, cell values are NCC indexes, mask values to boundary
-r_pu <- mask((pu_1km * CONSTANT_1KM_IDX), vect(Boundary)) 
+# Raster 1km grid, cell values are NCC indexes, mask values to aoi
+r_pu <- mask((pu_1km * IDX), vect(aoi)) 
 
 # Vector 1km grid
 v_pu <- st_as_sf(as.polygons(r_pu)) %>%
