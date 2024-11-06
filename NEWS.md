@@ -1,3 +1,11 @@
+# wtw-data-prep 1.1.2
+
+### Minor changes and bug fixes
+
+- New `downloadable` field for `Features`, `Weights`, `Includes`, `Excludes` 
+and `Solutions`. When `downloadable` is set to `FALSE`, the spatial layer will not 
+be available for export.
+
 # wtw-data-prep 1.0.0
 
 ### Major changes
