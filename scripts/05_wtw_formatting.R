@@ -28,7 +28,7 @@ start_time <- Sys.time()
 if (!require(wheretowork)) {
   if (!require(remotes)) install.packages("remotes")
   options(download.file.method = "wininet")
-  remotes::install_github("NCC-CNC/wheretowork", ref = "dev", method = "wininet")  
+  remotes::install_github("NCC-CNC/wheretowork")  
 }
 
 
