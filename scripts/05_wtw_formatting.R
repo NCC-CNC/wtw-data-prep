@@ -27,6 +27,7 @@ start_time <- Sys.time()
 ## Install wheretowork if not yet installed
 if (!require(wheretowork)) {
   if (!require(remotes)) install.packages("remotes")
+  options(download.file.method = "wininet")
   remotes::install_github("NCC-CNC/wheretowork")  
 }
 
@@ -101,7 +102,7 @@ raster_data <- lapply(file.path(tiffs_path, metadata$File), function(x) {
   } else {
     print(paste0(names(raster_x), ": can not stack"))
     print(paste0("... aligning to ", names(pu)))
-    terra::project(raster_x, y = pu, method = "ngb")
+    terra::project(raster_x, y = pu, method = "near")
   }
 }) 
 
@@ -124,6 +125,7 @@ theme_legend <- metadata$Legend[metadata$Type == "theme"]
 theme_labels <- metadata$Labels[metadata$Type == "theme"]
 theme_values <- metadata$Values[metadata$Type == "theme"]
 theme_goals <- metadata$Goal[metadata$Type == "theme"]
+theme_downloadble <- metadata$Downloadable[metadata$Type == "theme"]
 
 ## Prepare weight inputs (if there are any) ----
 if ("weight" %in% unique(metadata$Type)) {
@@ -138,6 +140,7 @@ if ("weight" %in% unique(metadata$Type)) {
   weight_legend <- metadata$Legend[metadata$Type == "weight"]
   weight_labels <- metadata$Labels[metadata$Type == "weight"]
   weight_values <- metadata$Values[metadata$Type == "weight"]
+  weight_downloadble <- metadata$Downloadable[metadata$Type == "weight"]
 } else {
   weight_data <- c() # no weights in project
 }
@@ -154,6 +157,7 @@ if ("include" %in% unique(metadata$Type)) {
   include_legend <- metadata$Legend[metadata$Type == "include"]
   include_labels <- metadata$Labels[metadata$Type == "include"]
   include_hidden <- metadata$Hidden[metadata$Type == "include"]
+  include_downloadble <- metadata$Downloadable[metadata$Type == "include"]
 } else {
   include_data <- c() # no includes in project
 }
@@ -170,6 +174,7 @@ if ("exclude" %in% unique(metadata$Type)) {
   exclude_legend <- metadata$Legend[metadata$Type == "exclude"]
   exclude_labels <- metadata$Labels[metadata$Type == "exclude"]
   exclude_hidden <- metadata$Hidden[metadata$Type == "exclude"]
+  exclude_downloadble <- metadata$Downloadable[metadata$Type == "exclude"]
 } else {
   exclude_data <- c() # no excludes in project
 }
@@ -202,6 +207,7 @@ themes <- lapply(seq_along(unique(theme_groups)), function(i) {
   curr_theme_legend <- theme_legend[theme_groups == curr_theme_groups]
   curr_theme_values <- theme_values[theme_groups == curr_theme_groups]
   curr_theme_goals <- theme_goals[theme_groups == curr_theme_groups]
+  curr_theme_downloadable <- theme_downloadble[theme_groups == curr_theme_groups]
   
   #### create list of features (j) associated with group
   curr_features <- lapply(seq_along(curr_theme_names), function(j) {
@@ -254,7 +260,8 @@ themes <- lapply(seq_along(unique(theme_groups)), function(i) {
       limit_goal = 0,
       visible = curr_theme_visible[j],
       hidden = curr_theme_hidden[j],
-      variable = v
+      variable = v,
+      downloadable = curr_theme_downloadable[j]
     )    
   })
   
@@ -307,7 +314,8 @@ if (!is.null(weight_data)) {
     #### create weight
     wheretowork::new_weight(
       name = weight_names[i], variable = v, 
-      visible = weight_visible[i], hidden = weight_hidden[i]
+      visible = weight_visible[i], hidden = weight_hidden[i],
+      downloadable = weight_downloadble[i]
     )
   })
 }
@@ -332,6 +340,7 @@ if (!is.null(include_data)) {
       name = include_names[i],
       visible = include_visible[i],
       hidden = include_hidden[i],
+      downloadable = include_downloadble[i],
       variable = wheretowork::new_variable(
         dataset = dataset,
         index = names(include_data)[i],
@@ -364,6 +373,7 @@ if (!is.null(exclude_data)){
       name = exclude_names[i],
       visible = exclude_visible[i],
       hidden = exclude_hidden[i],
+      downloadable = include_downloadble[i],
       variable = wheretowork::new_variable(
         dataset = dataset,
         index = names(exclude_data)[i],
