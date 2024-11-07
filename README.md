@@ -4,13 +4,13 @@ This repo assists in formatting your data into the four mandatory files (describ
 
 These scripts can be used when planning units are grid cells that can be passed to WTW as raster layers where each raster cell is a unique planning unit. For non-grid planning units, a different workflow is required ([#9](https://github.com/NCC-CNC/wtw-data-prep/issues/9)).
 
-When starting a new project, we recommend copying the scripts, functions, and data from this repo into your project folder. You can then edit the scripts and run them from your project folder.
+When starting a new project, we recommend copying the scripts from this repo into your project folder. You can then edit the scripts and run them from your project folder.
 
 > **Note** Basic coding skills in R (and possibly Python) are required to use these scripts.
 
 ## Objective
 
-The objective of these scripts is to get the source data into a standardized set of raster files where the raster grid cells represent the planning units. The source data is also used to prepare a meta data csv table that defines the WTW parameters for each raster. The `05_wtw_formatting.R` script can then package the data into the WTW format so it can be loaded into WTW.
+The objective of these scripts is to get the source data into a standardized set of raster files where the raster grid cells represent the planning units. The source data is also used to prepare a `metadata.csv` table that defines the WTW parameters for each raster. The `05_wtw_formatting.R` script can then package the data into the WTW format so it can be loaded into WTW.
 
 ![image](https://user-images.githubusercontent.com/10728298/235223843-5ea67e67-f564-436c-8af9-c9270f239ec9.png)
 
@@ -79,8 +79,6 @@ The following scripts in this repo are used to prepare the standard [national da
 -   `04_populate_nat_metadata.R` - copies the required rasters to the **Tiffs** folder and uses them to prepare the metadata csv file.
 -   `05_wtw_formatting.R` - Uses the **Tiffs** rasters and the metadata csv file to create the four WTW input files.
 -   `functions` - folder containing functions needed by various scripts.
--   `data` - folder containing the NCC 1km raster template required by `02_aoi_to_1km_grid.R`.
-
 
 ## Regional data
 
@@ -247,7 +245,7 @@ Provide the file name with extension of the layer. <br>
 Example: T_ECCC_SAR_Agalinis_gattingeri.tif
 
 - **Name** <br>
-Provide a name for the layer. <br>
+Provide a name for the layer. This name is used in the `wheretowork` table of contents. <br>
 Example: Existing conservation
 
 - **Legend** <br>
@@ -281,7 +279,7 @@ Optional; define the order of the layers when `wheretowork`is initialized. <br>
 
 - **Visible** <br>
 Define if the layer will be visible when `wheretowork`is initialized. <br>
-Available choices: TRUE or FALSE
+Available choices: `TRUE` or `FALSE`
 
 - **Hidden** <br>
 Define if the layer will be hidden from `wheretowork` (recommended for large projects). <br>
@@ -291,6 +289,10 @@ Available choices: TRUE or FALSE
 If Type is theme, provide a goal for the layer when `wheretowork` is initialized. <br>
 Available choices: a number between 0 and 1
 
+- **Downloadable** <br>
+Define if the layer will be available for download. When `downloadable` 
+is set to `FALSE`, the spatial layer will not be available for export in `wheretowork`. <br>
+Available choices: `TRUE` or `FALSE`
 
 <h3 id="wtw-formatting"><code>05_wtw_formatting.R</code></h3>
 
