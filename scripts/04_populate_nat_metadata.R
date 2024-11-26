@@ -35,7 +35,7 @@ source("scripts/functions/fct_init_metadata.R")
 ## Name of local WTW project
 WTW_PRJ_NAME <- "sw-on-v3" # <--- CHANGE TO A SHORT WTW PROJECT NAME
 ## Path to local WTW project
-PRJ_PATH <- "C:/Data/PRZ/WTW/SW_ONTARIO_V3" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
+PRJ_PATH <- "C:/Data/PRZ/WTW/REG_ON/SW_ONTARIO_V3" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
 
 tiff_path <- file.path(PRJ_PATH, "Tiffs")
 meta_path <-  file.path(PRJ_PATH, "WTW/metadata") 
@@ -288,7 +288,10 @@ for (i in seq_along(file_list)) {
     visible <- if (startsWith(file_no_ext, "I_NAT")) "TRUE" else "FALSE" 
     
     ## HIDDEN --------------------------------------------------------------------
-    hidden <- "FALSE" 
+    hidden <- "FALSE"
+    
+    ## DOWNLOADABLE ------------------------------------------------------------
+    downloadable <- if (startsWith(file_no_ext, "T_NAT_NSC")) "FALSE" else "TRUE"     
     
     ## GOAL ----------------------------------------------------------------------
     ## only set goals for themes
@@ -309,16 +312,20 @@ for (i in seq_along(file_list)) {
     }    
 
     ## Build new national row ----
-    new_row <- c(type, theme, file, name, legend, 
-                 values, color, labels, unit, provenance, 
-                 order, visible, hidden, goal)
+    new_row <- c(
+      type, theme, file, name, legend, 
+      values, color, labels, unit, provenance, 
+      order, visible, hidden, downloadable, goal
+    )
     
   } else {
     
     ## Build new regional row ----
-    new_row <- c("", "", file, "", "", 
-                 "", "", "", "", "regional", 
-                 "", "", "", "0.2")
+    new_row <- c(
+      "", "", file, "", "", 
+      "", "", "", "", "regional", 
+      "", "", "", "" , "0.2"
+    )
   }
   
   ## Append to DF
