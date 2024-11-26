@@ -16,5 +16,6 @@ init_metadata <- function(){
              Order = character(),
              Visible = character(),
              Hidden = character(),
+             Downloadable = character(),
              Goal = character())
 }

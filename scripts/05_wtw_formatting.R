@@ -51,7 +51,7 @@ library(wheretowork)
 # 2.0 Set up -------------------------------------------------------------------
 
 ## Set path where a QC'd metadata.csv version is located
-PRJ_PATH <- "C:/Data/PRZ/WTW/SW_ONTARIO_V3" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
+PRJ_PATH <- "C:/Data/PRZ/WTW/REG_ON/SW_ONTARIO_V3" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
 META_NAME <- "sw-on-v3-metadata.csv" # <--- CHANGE TO NAME OF YOUR metadata.csv. NEED TO ADD ".csv" extension
 
 ## Set output variables for WTW file names
