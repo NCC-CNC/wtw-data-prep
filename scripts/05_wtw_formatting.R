@@ -331,7 +331,7 @@ if (!is.null(include_data)) {
       legend <- wheretowork::new_manual_legend(
         values = c(0, 1),
         colors = trimws(unlist(strsplit(include_colors[i], ","))),
-        labels = unlist(strsplit(include_labels[i], ","))
+        labels = trimws(unlist(strsplit(include_labels[i], ",")))
       )
     }
     
@@ -364,7 +364,7 @@ if (!is.null(exclude_data)){
       legend <- wheretowork::new_manual_legend(
         values = c(0, 1),
         colors = trimws(unlist(strsplit(exclude_colors[i], ","))),
-        labels = unlist(strsplit(exclude_labels[i], ","))
+        labels = trimws(unlist(strsplit(exclude_labels[i], ",")))
       )
     }
     
