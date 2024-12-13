@@ -344,7 +344,7 @@ if (!is.null(include_data)) {
       variable = wheretowork::new_variable(
         dataset = dataset,
         index = names(include_data)[i],
-        units = " ",
+        units = include_units[i],
         total = terra::global(include_data[[i]], fun = "sum", na.rm = TRUE)$sum,
         legend = legend,
         provenance = wheretowork::new_provenance_from_source(include_provenance[i])
@@ -377,7 +377,7 @@ if (!is.null(exclude_data)){
       variable = wheretowork::new_variable(
         dataset = dataset,
         index = names(exclude_data)[i],
-        units = " ",
+        units = exclude_units[i],,
         total = terra::global(exclude_data[[i]], fun = "sum", na.rm = TRUE)$sum,
         legend = legend,
         provenance = wheretowork::new_provenance_from_source(exclude_provenance[i])
