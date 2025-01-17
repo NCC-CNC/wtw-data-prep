@@ -188,7 +188,7 @@ if ("exclude" %in% unique(metadata$Type)) {
 
 # 5.0 Build wheretowork objects ------------------------------------------------
 
-# Requires wheretowork package (version 1.0.0)
+# Requires wheretowork package (version >= 1.2.3)
 
 ## Create dataset ----
 dataset <- wheretowork::new_dataset_from_auto(
