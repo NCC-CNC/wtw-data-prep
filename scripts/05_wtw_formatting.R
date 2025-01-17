@@ -72,7 +72,6 @@ meta_path <- file.path(PRJ_PATH, paste0("WTW/metadata/", META_NAME))
 tiffs_path <- file.path(PRJ_PATH,"TIFFS")
 pu_path <- file.path(PRJ_PATH,"PU/PU.tif")
 
-
 # 3.0 Import meta data and PUs -------------------------------------------------
 
 ## Import formatted csv (metadata) as tibble 
