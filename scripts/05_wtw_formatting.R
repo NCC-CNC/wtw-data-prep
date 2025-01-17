@@ -24,11 +24,10 @@ start_time <- Sys.time()
 
 # 1.0 Load packages ------------------------------------------------------------
 
-## Install wheretowork if not yet installed
-if (!require(wheretowork)) {
+## Install wheretowork if not yet installed or is not updated to current version (HARD CODED FOR NOW)
+if (!require(wheretowork) || packageVersion("wheretowork") != "1.2.3") { 
   if (!require(remotes)) install.packages("remotes")
-  options(download.file.method = "wininet")
-  remotes::install_github("NCC-CNC/wheretowork")  
+  remotes::install_github("NCC-CNC/wheretowork", ref = "master")  
 }
 
 
@@ -51,12 +50,20 @@ library(wheretowork)
 # 2.0 Set up -------------------------------------------------------------------
 
 ## Set path where a QC'd metadata.csv version is located
-PRJ_PATH <- "C:/Data/PRZ/WTW/REG_ON/SW_ONTARIO_V3" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
-META_NAME <- "sw-on-v3-metadata.csv" # <--- CHANGE TO NAME OF YOUR metadata.csv. NEED TO ADD ".csv" extension
+PRJ_PATH <- "C:/Data/PRZ/WTW/CONSTECH/SW_ONTARIO_V3" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
+META_NAME <- "it-swon-1km-metadata.csv" # <--- CHANGE TO NAME OF YOUR metadata.csv. NEED TO ADD ".csv" extension
 
 ## Set output variables for WTW file names
-PRJ_NAME <- "SW Ontario v3" # <----- spaces allowed
-PRJ_FILE_NAME <-"sw_on_v3" # <----- no spaces allowed
+### What regional operating or business unit?
+OU <- "IT"  # <--- REG_BC, REG_AB, REG SK, REG MB, REG ON, REG QC, REG AT, IT, CPP, SOS, MD etc.
+### Planning unit scale
+SCALE <- "1km2" # <--- Set scale in ha or km2
+### Unique name that describes the WTW project
+NAME <- "South Western Ontario Example" # <--- give a unique name
+  
+PRJ_NAME <- paste0(OU, ": ", NAME, ", ", SCALE)
+PRJ_FILE_NAME <- gsub(" ", "_", gsub("[[:punct:]]", "", PRJ_NAME))
+
 AUTHOR<- "Dan Wismer" # <----- your name
 EMAIL <- "dan.wismer@natureconservancy.ca" # <----- your email
 GROUPS <- "private" # <---- options: public or private  
@@ -64,7 +71,6 @@ GROUPS <- "private" # <---- options: public or private
 meta_path <- file.path(PRJ_PATH, paste0("WTW/metadata/", META_NAME)) 
 tiffs_path <- file.path(PRJ_PATH,"TIFFS")
 pu_path <- file.path(PRJ_PATH,"PU/PU.tif")
-
 
 # 3.0 Import meta data and PUs -------------------------------------------------
 
@@ -182,7 +188,7 @@ if ("exclude" %in% unique(metadata$Type)) {
 
 # 5.0 Build wheretowork objects ------------------------------------------------
 
-# Requires wheretowork package (version 1.0.0)
+# Requires wheretowork package (version >= 1.2.3)
 
 ## Create dataset ----
 dataset <- wheretowork::new_dataset_from_auto(
@@ -373,7 +379,7 @@ if (!is.null(exclude_data)){
       name = exclude_names[i],
       visible = exclude_visible[i],
       hidden = exclude_hidden[i],
-      downloadable = include_downloadble[i],
+      downloadable = exclude_downloadble[i],
       variable = wheretowork::new_variable(
         dataset = dataset,
         index = names(exclude_data)[i],
