@@ -50,12 +50,20 @@ library(wheretowork)
 # 2.0 Set up -------------------------------------------------------------------
 
 ## Set path where a QC'd metadata.csv version is located
-PRJ_PATH <- "C:/Data/PRZ/WTW/REG_ON/SW_ONTARIO_V3" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
-META_NAME <- "sw-on-v3-metadata.csv" # <--- CHANGE TO NAME OF YOUR metadata.csv. NEED TO ADD ".csv" extension
+PRJ_PATH <- "C:/Data/PRZ/WTW/CONSTECH/SW_ONTARIO_V3" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
+META_NAME <- "it-swon-1km-metadata.csv" # <--- CHANGE TO NAME OF YOUR metadata.csv. NEED TO ADD ".csv" extension
 
 ## Set output variables for WTW file names
-PRJ_NAME <- "SW Ontario v3" # <----- spaces allowed
-PRJ_FILE_NAME <-"sw_on_v3" # <----- no spaces allowed
+### What regional operating or business unit?
+OU <- "IT"  # <--- REG_BC, REG_AB, REG SK, REG MB, REG ON, REG QC, REG AT, IT, CPP, SOS, MD etc.
+### Planning unit scale
+SCALE <- "1km2" # <--- Set scale in ha or km2
+### Unique name that describes the WTW project
+NAME <- "South Western Ontario Example" # <--- give a unique name
+  
+PRJ_NAME <- paste0(OU, ": ", NAME, ", ", SCALE)
+PRJ_FILE_NAME <- gsub(" ", "_", gsub("[[:punct:]]", "", PRJ_NAME))
+
 AUTHOR<- "Dan Wismer" # <----- your name
 EMAIL <- "dan.wismer@natureconservancy.ca" # <----- your email
 GROUPS <- "private" # <---- options: public or private  
