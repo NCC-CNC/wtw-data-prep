@@ -380,7 +380,7 @@ if (!is.null(exclude_data)){
       name = exclude_names[i],
       visible = exclude_visible[i],
       hidden = exclude_hidden[i],
-      downloadable = include_downloadble[i],
+      downloadable = exclude_downloadble[i],
       variable = wheretowork::new_variable(
         dataset = dataset,
         index = names(exclude_data)[i],
