@@ -24,7 +24,7 @@ library(stringr)
 library(terra)
 
 ## Set folder paths ----
-PRJ_PATH <- "C:/Data/PRZ/WTW/SW_ONTARIO_V3" # <--- CHANGE TO LOCAL WTW PROJECT
+PRJ_PATH <- "C:/Data/PRZ/WTW/CONSTECH/SW_ONTARIO_V3" # <--- CHANGE TO LOCAL WTW PROJECT
 
 tif_path <- file.path(PRJ_PATH, "Tiffs")
 tbl_path <- file.path(PRJ_PATH, "National/_Tables")
@@ -76,7 +76,7 @@ df <- data.frame(
 
 # Populate species df ----
 for (i in seq_along(tif_lst)) {
-  
+
   ## read-in raster
   wtw_raster <- rast(tif_lst[i])
   
