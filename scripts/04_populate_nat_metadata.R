@@ -32,10 +32,10 @@ source("scripts/functions/fct_init_metadata.R")
 
 # 2.0 Set up -------------------------------------------------------------------
 
-## Name of local WTW project
-WTW_PRJ_NAME <- "sw-on-v3" # <--- CHANGE TO A SHORT WTW PROJECT NAME
+## Name of output metadata .csv
+META_NAME <- "it-swon-1km" # <--- CHANGE TO A SHORT WTW PROJECT NAME (OU/BU-shortname-scale)
 ## Path to local WTW project
-PRJ_PATH <- "C:/Data/PRZ/WTW/REG_ON/SW_ONTARIO_V3" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
+PRJ_PATH <- "C:/Data/PRZ/WTW/CONSTECH/SW_ONTARIO_V3" # <--- CHANGE TO YOUR LOCAL WTW PROJECT FOLDER
 
 tiff_path <- file.path(PRJ_PATH, "Tiffs")
 meta_path <-  file.path(PRJ_PATH, "WTW/metadata") 
@@ -336,7 +336,7 @@ for (i in seq_along(file_list)) {
 # Write to csv ----
 write.csv(
   df,
-  file.path(meta_path, paste0(WTW_PRJ_NAME, "-metadata-NEEDS-QC.csv")),
+  file.path(meta_path, paste0(META_NAME, "-metadata-NEEDS-QC.csv")),
   row.names = FALSE
 )
 
