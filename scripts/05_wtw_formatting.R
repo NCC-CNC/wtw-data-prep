@@ -25,9 +25,11 @@ start_time <- Sys.time()
 # 1.0 Load packages ------------------------------------------------------------
 
 ## Install wheretowork if not yet installed or is not updated to current version (HARD CODED FOR NOW)
-if (!require(wheretowork) || packageVersion("wheretowork") != "1.2.5") { 
+if (!require(wheretowork) || packageVersion("wheretowork") < "1.2.4") { 
   if (!require(remotes)) install.packages("remotes")
-  remotes::install_github("NCC-CNC/wheretowork", ref = "master")  
+  # options(download.file.method = "libcurl")
+  # options(download.file.method = "wininet")
+  remotes::install_github(repo = "NCC-CNC/wheretowork", ref = "master")  
 }
 
 
@@ -35,7 +37,8 @@ if (!require(wheretowork) || packageVersion("wheretowork") != "1.2.5") {
 ## 1. Create Github account
 ## 2. Generate a personal access token (classic) PAT
 ## 3. Create a .Renviron file in your Documents directory
-## 4. Paste your PAT in your .Renviron file
+## 4. Paste your PAT in your .Renviron file. Should look like this:
+###   GITHUB_PAT = "PASTE YOUR PAT HERE"
 
 # If rcbc fails to install, be sure to have Rtools44 installed
 ## https://cran.r-project.org/bin/windows/Rtools/
