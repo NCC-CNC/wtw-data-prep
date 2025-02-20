@@ -25,7 +25,7 @@ start_time <- Sys.time()
 # 1.0 Load packages ------------------------------------------------------------
 
 ## Install wheretowork if not yet installed or is not updated to current version (HARD CODED FOR NOW)
-if (!require(wheretowork) || packageVersion("wheretowork") != "1.2.3") { 
+if (!require(wheretowork) || packageVersion("wheretowork") != "1.2.5") { 
   if (!require(remotes)) install.packages("remotes")
   remotes::install_github("NCC-CNC/wheretowork", ref = "master")  
 }
@@ -383,7 +383,7 @@ if (!is.null(exclude_data)){
       variable = wheretowork::new_variable(
         dataset = dataset,
         index = names(exclude_data)[i],
-        units = exclude_units[i],,
+        units = exclude_units[i],
         total = terra::global(exclude_data[[i]], fun = "sum", na.rm = TRUE)$sum,
         legend = legend,
         provenance = wheretowork::new_provenance_from_source(exclude_provenance[i])
